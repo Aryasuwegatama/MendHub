@@ -71,7 +71,7 @@ export default function Home() {
   const [location, setLocation] = useState("");
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-slate-50 text-slate-900">
       <section className="overflow-hidden bg-gradient-to-br from-teal-600 via-teal-700 to-slate-950 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="rounded-[2rem] bg-slate-950/10 p-8 backdrop-blur-xl sm:p-12">
@@ -238,52 +238,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <footer className="bg-slate-950 px-4 py-12 text-slate-300 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 lg:flex-row lg:justify-between">
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-white">MendHub</h3>
-            <p className="max-w-md text-slate-400">A mobile-first repair marketplace for Brisbane, built for small businesses and local customers.</p>
-          </div>
-          <div className="grid gap-8 sm:grid-cols-3 lg:grid-cols-4">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-500">Explore</p>
-              <ul className="mt-4 space-y-2 text-sm text-slate-400">
-                <li>Services</li>
-                <li>Providers</li>
-                <li>How it works</li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-500">Company</p>
-              <ul className="mt-4 space-y-2 text-sm text-slate-400">
-                <li>About</li>
-                <li>Contact</li>
-                <li>Privacy</li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-500">Contact</p>
-              <ul className="mt-4 space-y-2 text-sm text-slate-400">
-                <li>info@mendhub.com.au</li>
-                <li>(07) 1234 5678</li>
-                <li>Brisbane, QLD</li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-500">Follow</p>
-              <div className="mt-4 flex items-center gap-3 text-2xl text-slate-400">
-                <span>📘</span>
-                <span>🐦</span>
-                <span>📷</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mt-10 border-t border-slate-800 pt-6 text-center text-sm text-slate-500">
-          &copy; 2026 MendHub. This platform is for informational purposes only.
-        </div>
-      </footer>
-    </main>
+    </div>
   );
 }
