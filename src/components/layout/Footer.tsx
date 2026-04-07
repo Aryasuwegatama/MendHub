@@ -82,7 +82,7 @@ export default function Footer() {
           &copy; {new Date().getFullYear()} MendHub. This platform is for informational purposes only.
         </p>
         <p className="mt-1 italic">
-          This website is a student project created for NIT3274 at James Cook University. It is not a real business.
+          This website is a student project created for NIT3274 at Victoria University Brisbane. It is not a real business.
         </p>
       </div>
     </footer>
