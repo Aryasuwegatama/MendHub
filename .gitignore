@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# project docs (local only)
+/docs/
+extract-pdfs.js
+extract_pdfs.py
+
+# drizzle
+/drizzle/
+
+AGENT.md
+CLAUDE.md
+DEVELOPMENT_GUIDE.md
