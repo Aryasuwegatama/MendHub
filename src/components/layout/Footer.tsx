@@ -79,7 +79,7 @@ export default function Footer() {
       </div>
       <div className="mt-10 border-t border-slate-800 pt-6 text-center text-sm text-slate-500">
         <p>
-          &copy; {new Date().getFullYear()} MendHub. This platform is for informational purposes only.
+          &copy; 2026 MendHub. This platform is for informational purposes only.
         </p>
         <p className="mt-1 italic">
           This website is a student project created for NIT3274 at Victoria University Brisbane. It is not a real business.
