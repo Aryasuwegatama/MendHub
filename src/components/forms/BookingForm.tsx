@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { routes } from "@/config/routes";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
@@ -20,6 +22,7 @@ interface BookingFormProps {
 }
 
 export default function BookingForm({ providerId }: BookingFormProps) {
+  const router = useRouter();
   const [submitMessage, setSubmitMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -56,11 +59,8 @@ export default function BookingForm({ providerId }: BookingFormProps) {
         ...data,
       });
 
-      setSubmitMessage({
-        type: "success",
-        text: "Booking request submitted successfully.",
-      });
       reset();
+      router.push(routes.payment);
     } catch (error) {
       setSubmitMessage({
         type: "error",
