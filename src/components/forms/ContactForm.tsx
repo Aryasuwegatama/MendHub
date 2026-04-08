@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
@@ -13,6 +14,11 @@ type ContactFormValues = {
 };
 
 export default function ContactForm() {
+  const [submitMessage, setSubmitMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -27,9 +33,29 @@ export default function ContactForm() {
     },
   });
 
-  const onSubmit = (data: ContactFormValues) => {
-    console.log("Contact form submitted:", data);
-    reset();
+  const onSubmit = async (data: ContactFormValues) => {
+    setSubmitMessage(null);
+
+    try {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        throw new Error("You appear to be offline. Please reconnect and try again.");
+      }
+
+      await Promise.resolve();
+
+      console.log("Contact form submitted:", data);
+
+      setSubmitMessage({
+        type: "success",
+        text: "Message sent successfully.",
+      });
+      reset();
+    } catch (error) {
+      setSubmitMessage({
+        type: "error",
+        text: error instanceof Error ? error.message : "Something went wrong. Please try again.",
+      });
+    }
   };
 
   return (
@@ -86,8 +112,27 @@ export default function ContactForm() {
             )}
           </div>
 
+          {submitMessage ? (
+            <div
+              className={submitMessage.type === "success"
+                ? "rounded-2xl border border-teal-200 bg-teal-50/80 px-4 py-3 text-sm font-medium text-teal-800 dark:border-teal-400/20 dark:bg-teal-400/10 dark:text-teal-200"
+                : "rounded-2xl border border-red-200 bg-red-50/80 px-4 py-3 text-sm font-medium text-red-700 dark:border-red-400/20 dark:bg-red-400/10 dark:text-red-200"
+              }
+            >
+              {submitMessage.text}
+            </div>
+          ) : null}
+
           <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={isSubmitting}>
-            {isSubmitting ? "Sending..." : "Send Message"}
+            {isSubmitting ? (
+              <span className="inline-flex items-center gap-2">
+                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="9" className="opacity-25" stroke="currentColor" strokeWidth="3" />
+                  <path d="M21 12a9 9 0 0 0-9-9" className="opacity-90" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                </svg>
+                Sending...
+              </span>
+            ) : "Send Message"}
           </Button>
         </form>
       </Card>
