@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
@@ -19,6 +20,11 @@ interface BookingFormProps {
 }
 
 export default function BookingForm({ providerId }: BookingFormProps) {
+  const [submitMessage, setSubmitMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -35,20 +41,40 @@ export default function BookingForm({ providerId }: BookingFormProps) {
     },
   });
 
-  const onSubmit = (data: BookingFormValues) => {
-    console.log("Booking form submitted:", {
-      providerId,
-      ...data,
-    });
-    reset();
+  const onSubmit = async (data: BookingFormValues) => {
+    setSubmitMessage(null);
+
+    try {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        throw new Error("You appear to be offline. Please reconnect and try again.");
+      }
+
+      await Promise.resolve();
+
+      console.log("Booking form submitted:", {
+        providerId,
+        ...data,
+      });
+
+      setSubmitMessage({
+        type: "success",
+        text: "Booking request submitted successfully.",
+      });
+      reset();
+    } catch (error) {
+      setSubmitMessage({
+        type: "error",
+        text: error instanceof Error ? error.message : "Something went wrong. Please try again.",
+      });
+    }
   };
 
   return (
-    <Card className="mx-auto max-w-3xl border-slate-200 bg-white">
+    <Card className="mx-auto max-w-3xl bg-white/52 dark:bg-slate-950/42">
       <div className="mb-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700">Booking request</p>
-        <h2 className="mt-3 text-2xl font-bold text-slate-900">Book a Repair Service</h2>
-        <p className="mt-3 text-slate-600">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">Booking request</p>
+        <h2 className="mt-3 text-2xl font-bold text-slate-900 dark:text-white">Book a Repair Service</h2>
+        <p className="mt-3 text-slate-600 dark:text-slate-300">
           Fill out the details below and we will use this information to start your booking.
         </p>
       </div>
@@ -108,14 +134,14 @@ export default function BookingForm({ providerId }: BookingFormProps) {
         />
 
         <div className="space-y-1.5">
-          <label htmlFor="issue-summary" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="issue-summary" className="block text-sm font-medium text-slate-700 dark:text-slate-200">
             Issue Summary
           </label>
           <textarea
             id="issue-summary"
             rows={5}
             placeholder="Briefly describe the repair issue"
-            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder:text-slate-400 transition focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+            className="glass-input w-full rounded-xl px-4 py-2.5 transition focus:outline-none focus:ring-2 focus:ring-[var(--surface-ring)]"
             {...register("issueSummary", {
               required: "Issue summary is required.",
             })}
@@ -125,8 +151,27 @@ export default function BookingForm({ providerId }: BookingFormProps) {
           )}
         </div>
 
+        {submitMessage ? (
+          <div
+            className={submitMessage.type === "success"
+              ? "rounded-2xl border border-teal-200 bg-teal-50/80 px-4 py-3 text-sm font-medium text-teal-800 dark:border-teal-400/20 dark:bg-teal-400/10 dark:text-teal-200"
+              : "rounded-2xl border border-red-200 bg-red-50/80 px-4 py-3 text-sm font-medium text-red-700 dark:border-red-400/20 dark:bg-red-400/10 dark:text-red-200"
+            }
+          >
+            {submitMessage.text}
+          </div>
+        ) : null}
+
         <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Submit Booking"}
+          {isSubmitting ? (
+            <span className="inline-flex items-center gap-2">
+              <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" className="opacity-25" stroke="currentColor" strokeWidth="3" />
+                <path d="M21 12a9 9 0 0 0-9-9" className="opacity-90" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+              </svg>
+              Submitting...
+            </span>
+          ) : "Submit Booking"}
         </Button>
       </form>
     </Card>
