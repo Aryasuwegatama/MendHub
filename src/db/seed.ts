@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import { db } from './index';
 import { categories, providers, providerCategories, services } from './schema';
-import { eq } from 'drizzle-orm';
 
 async function main() {
   console.log('--- Database Seeding Started ---');

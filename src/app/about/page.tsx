@@ -15,7 +15,7 @@ export default function AboutPage() {
       <div className="mt-6 space-y-4 text-slate-600">
         <p>
           MendHub was founded on a simple idea: making it easier to find high-quality,
-          local repair services. Whether it's a cracked screen, a leaking tap, or a 
+          local repair services. Whether it&apos;s a cracked screen, a leaking tap, or a 
           failing appliance, we help you find the right expert for the job.
         </p>
         <p>
