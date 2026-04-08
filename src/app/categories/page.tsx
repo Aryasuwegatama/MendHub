@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import Card from "@/components/ui/Card";
+import { categories } from "@/lib/mockData";
 
 export const metadata: Metadata = {
   title: "Browse Categories",
@@ -7,11 +10,39 @@ export const metadata: Metadata = {
 
 export default function CategoriesPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold text-slate-900">Browse Categories</h1>
-      <p className="mt-4 text-slate-600">
-        Find the right category for your repair. This page is under construction.
-      </p>
+    <div className="min-h-screen px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl">
+        <section className="overflow-hidden rounded-[2rem] border border-white/60 bg-white/50 px-6 py-12 shadow-xl shadow-slate-900/5 backdrop-blur-xl sm:px-10">
+          <p className="inline-flex rounded-full border border-teal-200 bg-teal-50/80 px-4 py-1 text-sm font-semibold uppercase tracking-[0.2em] text-teal-800">
+            Browse categories
+          </p>
+          <h1 className="mt-5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Choose a repair category with confidence.
+          </h1>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
+            Pick a category below to jump into provider listings. Each card routes to the providers page with a category filter in the URL.
+          </p>
+        </section>
+
+        <section className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {categories.map((category) => (
+            <Link key={category.key} href={category.href} className="group block">
+              <Card hoverable className="h-full overflow-hidden border-white/70 bg-white/55">
+                <div className={`inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br ${category.accent} text-3xl shadow-lg shadow-slate-900/10`}>
+                  {category.icon}
+                </div>
+                <h2 className="mt-6 text-2xl font-semibold text-slate-900 transition group-hover:text-teal-800">
+                  {category.title}
+                </h2>
+                <p className="mt-3 text-slate-600">{category.description}</p>
+                <div className="mt-6 inline-flex items-center rounded-full border border-slate-200/80 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-700 transition group-hover:border-teal-300 group-hover:text-teal-800">
+                  View providers
+                </div>
+              </Card>
+            </Link>
+          ))}
+        </section>
+      </div>
     </div>
   );
 }

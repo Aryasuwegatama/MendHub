@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import ThemeProvider from "@/components/theme/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,6 +24,20 @@ export const metadata: Metadata = {
     "Find trusted local repair services in Brisbane. Compare providers, book repairs, and get quotes for phones, laptops, appliances, and more.",
 };
 
+const themeScript = `
+  (function () {
+    try {
+      var storedTheme = localStorage.getItem('mendhub-theme');
+      var theme = storedTheme === 'light' || storedTheme === 'dark'
+        ? storedTheme
+        : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (error) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -35,11 +50,14 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col font-sans" suppressHydrationWarning>
-        <Navbar />
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <ThemeProvider>
+          <Navbar />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

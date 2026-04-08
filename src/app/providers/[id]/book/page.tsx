@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import BookingForm from "@/components/forms/BookingForm";
+import PageIntro from "@/components/ui/PageIntro";
 
 export const metadata: Metadata = {
   title: "Book a Repair",
@@ -14,16 +15,17 @@ export default async function BookingPage({
   const { id } = await params;
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-16 sm:px-6 lg:px-8">
+    <div className="min-h-screen px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-8 max-w-3xl">
-          <h1 className="text-3xl font-bold text-slate-900">Book a Repair</h1>
-          <p className="mt-3 text-slate-600">
-            Provider ID: <span className="font-mono font-bold text-teal-700">{id}</span>
-          </p>
-        </div>
+        <PageIntro
+          badge="Book a Repair"
+          title="Book a repair with the same polished framing used across the site."
+          description={`Complete the booking form below for provider ID ${id}. This route stays frontend-only for now.`}
+        />
 
-        <BookingForm providerId={id} />
+        <div className="mt-10">
+          <BookingForm providerId={id} />
+        </div>
       </div>
     </div>
   );
