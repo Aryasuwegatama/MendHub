@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import BookingForm from "@/components/forms/BookingForm";
 import PageIntro from "@/components/ui/PageIntro";
+import { getMockProviderParams } from "@/lib/mockData";
 
 export const metadata: Metadata = {
   title: "Book a Repair",
   description: "Schedule your repair appointment with this provider.",
 };
+
+export function generateStaticParams() {
+  return getMockProviderParams();
+}
 
 export default async function BookingPage({
   params,

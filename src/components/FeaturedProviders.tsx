@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { routes } from "@/config/routes";
 
 type FeaturedProvider = {
   id: string;
@@ -99,13 +100,13 @@ export default function FeaturedProviders() {
 
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   <Link
-                    href={`/providers/${provider.id}`}
+                    href={routes.providers.details(provider.id)}
                     className="inline-flex items-center justify-center rounded-full bg-teal-500 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-teal-400"
                   >
                     View Details
                   </Link>
                   <Link
-                    href={`/providers/${provider.id}/quote`}
+                    href={routes.providers.quote(provider.id)}
                     className="glass-pill inline-flex items-center justify-center rounded-full px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-white/80 dark:text-slate-200 dark:hover:bg-white/10"
                   >
                     Request Quote

@@ -1,3 +1,5 @@
+import { routes } from "@/config/routes";
+
 export type CategoryKey = "phone" | "laptop" | "appliance" | "clothing" | "bicycle";
 
 export type CategoryCard = {
@@ -37,7 +39,7 @@ export const categories: CategoryCard[] = [
     title: "Phone Repair",
     icon: "📱",
     description: "Screen replacement, charging issues, battery swaps, and quick diagnostics.",
-    href: "/providers?category=phone",
+    href: routes.providers.byCategory("phone"),
     accent: "from-teal-400/80 via-cyan-400/70 to-sky-500/80",
   },
   {
@@ -45,7 +47,7 @@ export const categories: CategoryCard[] = [
     title: "Laptop Repair",
     icon: "💻",
     description: "Hardware faults, overheating, software issues, and performance tune-ups.",
-    href: "/providers?category=laptop",
+    href: routes.providers.byCategory("laptop"),
     accent: "from-cyan-400/80 via-teal-400/70 to-emerald-500/80",
   },
   {
@@ -53,7 +55,7 @@ export const categories: CategoryCard[] = [
     title: "Appliance Repair",
     icon: "🧰",
     description: "Help for washing machines, fridges, ovens, dryers, and other home appliances.",
-    href: "/providers?category=appliance",
+    href: routes.providers.byCategory("appliance"),
     accent: "from-teal-500/80 via-slate-500/70 to-slate-800/80",
   },
   {
@@ -61,7 +63,7 @@ export const categories: CategoryCard[] = [
     title: "Clothing Alteration",
     icon: "🪡",
     description: "Repairs, hemming, zip replacement, fittings, and fabric adjustments.",
-    href: "/providers?category=clothing",
+    href: routes.providers.byCategory("clothing"),
     accent: "from-amber-300/80 via-orange-300/70 to-rose-400/80",
   },
   {
@@ -69,7 +71,7 @@ export const categories: CategoryCard[] = [
     title: "Bicycle Repair",
     icon: "🚲",
     description: "Brake fixes, tyre replacement, servicing, and tune-ups for everyday bikes.",
-    href: "/providers?category=bicycle",
+    href: routes.providers.byCategory("bicycle"),
     accent: "from-lime-400/80 via-emerald-400/70 to-teal-500/80",
   },
 ];
@@ -290,4 +292,8 @@ export const mockProviders: MockProvider[] = [
 
 export function getMockProviderById(id: string) {
   return mockProviders.find((provider) => provider.id === id) ?? null;
+}
+
+export function getMockProviderParams() {
+  return mockProviders.map((provider) => ({ id: provider.id }));
 }

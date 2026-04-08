@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { routes } from "@/config/routes";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
@@ -92,6 +93,34 @@ function getRecommendation(answers: RecommenderAnswers) {
   return "General Repair Services";
 }
 
+function getProvidersHref(answers: RecommenderAnswers) {
+  if (answers.item && answers.item !== "other") {
+    return routes.providers.byCategory(answers.item);
+  }
+
+  if (answers.problem === "cracked") {
+    return routes.providers.byCategory("phone");
+  }
+
+  if (answers.problem === "not-turning-on") {
+    return routes.providers.byCategory("laptop");
+  }
+
+  if (answers.problem === "not-working") {
+    return routes.providers.byCategory("appliance");
+  }
+
+  if (answers.problem === "adjustment") {
+    return routes.providers.byCategory("clothing");
+  }
+
+  if (answers.problem === "noise-damage-wear") {
+    return routes.providers.byCategory("bicycle");
+  }
+
+  return routes.providers.index;
+}
+
 const TOTAL_STEPS = 4;
 
 export default function RecommenderPage() {
@@ -105,6 +134,7 @@ export default function RecommenderPage() {
   });
 
   const recommendation = useMemo(() => getRecommendation(answers), [answers]);
+  const providersHref = useMemo(() => getProvidersHref(answers), [answers]);
 
   const handleNext = () => {
     if (step === 1 && !answers.item) {
@@ -257,7 +287,7 @@ export default function RecommenderPage() {
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link
-                    href="/providers"
+                    href={providersHref}
                     className="inline-flex items-center justify-center rounded-full bg-teal-400 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-teal-300"
                   >
                     {ctaLabel}
