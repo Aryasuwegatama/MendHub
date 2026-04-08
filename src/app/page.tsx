@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import FeaturedProviders from "@/components/FeaturedProviders";
 
 const featuredCategories = [
   {
@@ -26,36 +27,6 @@ const featuredCategories = [
     description: "Mobile repair for cycles and small equipment.",
     icon: "🚲",
     accent: "from-teal-500 to-teal-700",
-  },
-];
-
-const providerCards = [
-  {
-    name: "CityFix Repairs",
-    category: "Phone Repair",
-    rating: "4.9",
-    reviews: "125",
-    price: "From $45",
-    location: "Brisbane CBD",
-    note: "Same-day screen repair",
-  },
-  {
-    name: "HomeCare Electrical",
-    category: "Electrical",
-    rating: "4.8",
-    reviews: "98",
-    price: "From $75",
-    location: "North Brisbane",
-    note: "Licensed electricians with 24/7 support",
-  },
-  {
-    name: "Handy Hive",
-    category: "Carpentry",
-    rating: "4.7",
-    reviews: "83",
-    price: "From $65",
-    location: "West Brisbane",
-    note: "Trusted local joinery and repairs",
   },
 ];
 
@@ -199,44 +170,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="providers" className="px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-10 text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-teal-700 dark:text-teal-300">Provider listing</p>
-            <h2 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">Featured providers</h2>
-            <p className="mx-auto mt-3 max-w-2xl text-slate-600 dark:text-slate-300">Structured provider cards make it easy to compare services, ratings, and starting prices.</p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {providerCards.map((provider) => (
-              <article key={provider.name} className="glass-panel rounded-3xl p-6 transition hover:-translate-y-1 hover:shadow-xl">
-                <div className="mb-5 flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-600">{provider.category}</p>
-                    <h3 className="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">{provider.name}</h3>
-                  </div>
-                  <div className="glass-pill rounded-3xl px-4 py-2 text-sm font-semibold text-teal-800 dark:text-teal-200">{provider.price}</div>
-                </div>
-                <p className="text-slate-600 dark:text-slate-300">{provider.note}</p>
-                <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-500 dark:text-slate-300">
-                  <span className="glass-pill inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 dark:text-slate-200">
-                    ⭐ {provider.rating}
-                  </span>
-                  <span className="glass-pill inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 dark:text-slate-200">
-                    {provider.reviews} reviews
-                  </span>
-                  <span className="glass-pill inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 dark:text-slate-200">
-                    {provider.location}
-                  </span>
-                </div>
-                <button className="mt-8 w-full rounded-3xl bg-teal-500 px-5 py-3 text-base font-semibold text-slate-950 transition hover:bg-teal-400">
-                  View Details
-                </button>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <FeaturedProviders />
 
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="glass-panel-strong mx-auto max-w-6xl rounded-[2rem] p-10 text-slate-900 dark:text-white sm:p-12">
