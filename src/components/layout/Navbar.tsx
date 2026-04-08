@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -18,7 +19,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950">
+    <nav className="sticky top-0 z-50 border-b border-white/40 bg-white/40 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/45">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -40,7 +41,7 @@ export default function Navbar() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="text-sm font-medium text-slate-300 transition hover:text-white"
+                  className="text-sm font-medium text-slate-700 transition hover:text-slate-950 dark:text-slate-300 dark:hover:text-white"
                 >
                   {link.label}
                 </Link>
@@ -50,6 +51,10 @@ export default function Navbar() {
 
           {/* CTA & Mobile Menu Button */}
           <div className="flex items-center gap-4">
+            <div className="hidden md:flex">
+              <ThemeToggle />
+            </div>
+
             <Link
               href="/list-your-business"
               className="hidden rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-teal-400 sm:block"
@@ -59,7 +64,7 @@ export default function Navbar() {
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none md:hidden"
+              className="inline-flex items-center justify-center rounded-md p-2 text-slate-500 hover:bg-white/50 hover:text-slate-950 focus:outline-none dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white md:hidden"
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? (
@@ -78,12 +83,16 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div className={cn("md:hidden", isOpen ? "block" : "hidden")}>
-        <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+        <div className="space-y-1 border-t border-white/30 bg-white/55 px-2 pb-3 pt-2 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/70 sm:px-3">
+          <div className="px-3 py-2">
+            <ThemeToggle compact />
+          </div>
+
           {navLinks.map((link) => (
             <Link
               key={link.label}
               href={link.href}
-              className="block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
+              className="block rounded-md px-3 py-2 text-base font-medium text-slate-700 hover:bg-white/60 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
               onClick={() => setIsOpen(false)}
             >
               {link.label}

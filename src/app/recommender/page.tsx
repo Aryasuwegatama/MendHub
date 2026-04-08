@@ -150,26 +150,26 @@ export default function RecommenderPage() {
   const ctaLabel = answers.nextStep ? NEXT_STEP_TO_CTA[answers.nextStep] : "See Providers";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-teal-50 via-white to-slate-100 px-4 py-16 sm:px-6 lg:px-8">
+    <div className="min-h-screen px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-teal-700">MVP innovation feature</p>
-          <h1 className="mt-4 text-3xl font-bold text-slate-900 sm:text-4xl">Smart Category Recommender</h1>
-          <p className="mt-4 text-slate-600">
+          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-teal-700 dark:text-teal-300">MVP innovation feature</p>
+          <h1 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">Smart Category Recommender</h1>
+          <p className="mt-4 text-slate-600 dark:text-slate-300">
             If you are unsure what repair service you need, this guided flow recommends the most suitable category before you continue.
           </p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-          <Card className="border-slate-200 bg-white/90">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700">Smart category recommender</p>
-            <h2 className="mt-3 text-2xl font-bold text-slate-900">Answer 4 short questions</h2>
-            <p className="mt-3 text-slate-600">
+          <Card className="bg-white/48 dark:bg-slate-950/45">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">Smart category recommender</p>
+            <h2 className="mt-3 text-2xl font-bold text-slate-900 dark:text-white">Answer 4 short questions</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">
               This guided flow helps you choose the right repair category before browsing providers.
             </p>
 
             {step <= TOTAL_STEPS && (
-              <p className="mt-6 text-sm font-medium text-slate-500">Step {step} of {TOTAL_STEPS}</p>
+              <p className="mt-6 text-sm font-medium text-slate-500 dark:text-slate-400">Step {step} of {TOTAL_STEPS}</p>
             )}
 
             <div className="mt-4 space-y-5">
@@ -239,7 +239,7 @@ export default function RecommenderPage() {
             </div>
           </Card>
 
-          <Card className="bg-slate-950 text-white">
+          <Card className="bg-slate-950/78 text-white dark:bg-slate-950/82">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-300">Recommended outcome</p>
             {step <= TOTAL_STEPS ? (
               <>

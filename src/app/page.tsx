@@ -71,10 +71,10 @@ export default function Home() {
   const [location, setLocation] = useState("");
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <section className="overflow-hidden bg-gradient-to-br from-teal-600 via-teal-700 to-slate-950 px-4 py-16 sm:px-6 lg:px-8">
+    <div className="min-h-screen text-slate-900 dark:text-slate-100">
+      <section className="overflow-hidden bg-gradient-to-br from-teal-600 via-teal-700 to-slate-950 px-4 py-16 sm:px-6 lg:px-8 dark:from-slate-950 dark:via-teal-950 dark:to-slate-900">
         <div className="mx-auto max-w-6xl">
-          <div className="rounded-[2rem] bg-slate-950/10 p-8 backdrop-blur-xl sm:p-12">
+          <div className="rounded-[2rem] border border-white/10 bg-white/8 p-8 backdrop-blur-xl sm:p-12 dark:bg-white/6">
             <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
               <div>
                 <p className="mb-4 inline-flex rounded-full bg-teal-100 px-4 py-1 text-sm font-semibold text-teal-900">
@@ -96,7 +96,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="rounded-[2rem] border border-white/10 bg-slate-950/90 p-6 shadow-2xl shadow-slate-950/20">
+              <div className="rounded-[2rem] border border-white/10 bg-slate-950/55 p-6 shadow-2xl shadow-slate-950/20 backdrop-blur-xl">
                 <div className="rounded-3xl border border-teal-400/30 bg-gradient-to-br from-teal-500/20 to-cyan-500/10 p-5">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-200">Innovation Feature</p>
                   <h2 className="mt-2 text-2xl font-semibold text-white">Smart Category Recommender</h2>
@@ -157,29 +157,29 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="categories" className="py-16 px-4 sm:px-6 lg:px-8">
+      <section id="categories" className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-teal-600">Service categories</p>
-            <h2 className="mt-4 text-3xl font-bold text-slate-900 sm:text-4xl">Browse by category</h2>
-            <p className="mx-auto mt-3 max-w-2xl text-slate-600">Choose a repair type and get matched to local providers quickly.</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-teal-700 dark:text-teal-300">Service categories</p>
+            <h2 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">Browse by category</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-slate-600 dark:text-slate-300">Choose a repair type and get matched to local providers quickly.</p>
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {featuredCategories.map((category) => (
-              <article key={category.title} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+              <article key={category.title} className="glass-panel rounded-3xl p-6 transition hover:-translate-y-1 hover:shadow-xl">
                 <div className={`mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${category.accent} text-2xl`}>
                   {category.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900">{category.title}</h3>
-                <p className="mt-3 text-slate-600">{category.description}</p>
+                <h3 className="text-xl font-semibold text-slate-900 dark:text-white">{category.title}</h3>
+                <p className="mt-3 text-slate-600 dark:text-slate-300">{category.description}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-teal-950 px-4 py-16 text-white sm:px-6 lg:px-8">
+      <section className="bg-teal-950/95 px-4 py-16 text-white sm:px-6 lg:px-8 dark:bg-slate-950/85">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-8 lg:grid-cols-[1.3fr_0.7fr] lg:items-center">
             <div>
@@ -189,7 +189,7 @@ export default function Home() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {recommender.map((item) => (
-                <div key={item} className="rounded-3xl border border-teal-500/20 bg-teal-950/80 p-5 text-slate-100">
+                <div key={item} className="rounded-3xl border border-white/10 bg-white/8 p-5 text-slate-100 backdrop-blur-xl">
                   <p className="text-sm font-semibold text-cyan-200">Recommended</p>
                   <p className="mt-3 text-base leading-7">{item}</p>
                 </div>
@@ -199,33 +199,33 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="providers" className="py-16 px-4 sm:px-6 lg:px-8">
+      <section id="providers" className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-teal-600">Provider listing</p>
-            <h2 className="mt-4 text-3xl font-bold text-slate-900 sm:text-4xl">Featured providers</h2>
-            <p className="mx-auto mt-3 max-w-2xl text-slate-600">Structured provider cards make it easy to compare services, ratings, and starting prices.</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-teal-700 dark:text-teal-300">Provider listing</p>
+            <h2 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">Featured providers</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-slate-600 dark:text-slate-300">Structured provider cards make it easy to compare services, ratings, and starting prices.</p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {providerCards.map((provider) => (
-              <article key={provider.name} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+              <article key={provider.name} className="glass-panel rounded-3xl p-6 transition hover:-translate-y-1 hover:shadow-xl">
                 <div className="mb-5 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-600">{provider.category}</p>
-                    <h3 className="mt-3 text-2xl font-semibold text-slate-900">{provider.name}</h3>
+                    <h3 className="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">{provider.name}</h3>
                   </div>
-                  <div className="rounded-3xl bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-800">{provider.price}</div>
+                  <div className="glass-pill rounded-3xl px-4 py-2 text-sm font-semibold text-teal-800 dark:text-teal-200">{provider.price}</div>
                 </div>
-                <p className="text-slate-600">{provider.note}</p>
-                <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-500">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-slate-700">
+                <p className="text-slate-600 dark:text-slate-300">{provider.note}</p>
+                <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-500 dark:text-slate-300">
+                  <span className="glass-pill inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 dark:text-slate-200">
                     ⭐ {provider.rating}
                   </span>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-slate-700">
+                  <span className="glass-pill inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 dark:text-slate-200">
                     {provider.reviews} reviews
                   </span>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-slate-700">
+                  <span className="glass-pill inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 dark:text-slate-200">
                     {provider.location}
                   </span>
                 </div>
@@ -238,18 +238,18 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-slate-900 px-4 py-16 text-white sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl rounded-[2rem] border border-cyan-500/20 bg-slate-950/90 p-10 shadow-2xl shadow-slate-950/20 sm:p-12">
+      <section className="px-4 py-16 sm:px-6 lg:px-8">
+        <div className="glass-panel-strong mx-auto max-w-6xl rounded-[2rem] p-10 text-slate-900 dark:text-white sm:p-12">
           <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">List Your Business</p>
-              <h2 className="mt-4 text-3xl font-bold text-white sm:text-4xl">Grow your repair business with MendHub</h2>
-              <p className="mt-4 text-slate-300">Join the local marketplace, reach more customers, and get booked through a simple onboarding flow.</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-700 dark:text-cyan-300">List Your Business</p>
+              <h2 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">Grow your repair business with MendHub</h2>
+              <p className="mt-4 text-slate-600 dark:text-slate-300">Join the local marketplace, reach more customers, and get booked through a simple onboarding flow.</p>
             </div>
             <div className="space-y-4">
-              <div className="rounded-3xl bg-slate-900/80 p-6 text-slate-100">
+              <div className="glass-panel-muted rounded-3xl p-6 text-slate-900 dark:text-slate-100">
                 <p className="font-semibold">Free listing setup</p>
-                <p className="mt-2 text-sm text-slate-400">Enter your business in minutes and start appearing in search results.</p>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Enter your business in minutes and start appearing in search results.</p>
               </div>
               <button className="w-full rounded-3xl bg-cyan-400 px-6 py-4 text-base font-semibold text-slate-950 transition hover:bg-cyan-300">
                 List Your Business

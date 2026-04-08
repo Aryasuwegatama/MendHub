@@ -13,8 +13,8 @@ export default function Card({
   return (
     <div
       className={cn(
-        "rounded-3xl border border-slate-200 bg-white p-6 shadow-sm",
-        hoverable && "transition hover:-translate-y-1 hover:shadow-lg",
+        "glass-panel rounded-3xl p-6",
+        hoverable && "transition duration-200 hover:-translate-y-1 hover:shadow-xl",
         className
       )}
       {...props}
