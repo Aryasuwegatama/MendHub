@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Card from "@/components/ui/Card";
+import Input from "@/components/ui/Input";
+import PageIntro from "@/components/ui/PageIntro";
 import { categories, mockProviders } from "@/lib/mockData";
 
 export const metadata: Metadata = {
@@ -26,26 +28,29 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
   return (
     <div className="min-h-screen px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <section className="overflow-hidden rounded-[2rem] border border-white/60 bg-white/50 px-6 py-12 shadow-xl shadow-slate-900/5 backdrop-blur-xl sm:px-10">
+        <PageIntro
+          badge="Provider Listing"
+          title={selectedCategory ? `${selectedCategory.title} providers` : "Find Providers"}
+          description={selectedCategory
+            ? `Showing static mock providers for ${selectedCategory.title}. The selected category is being read from the URL query param.`
+            : "Browse and compare repair providers in Brisbane using static demo data only. Category filtering comes from the URL query string."}
+        >
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="inline-flex rounded-full border border-cyan-200 bg-cyan-50/80 px-4 py-1 text-sm font-semibold uppercase tracking-[0.2em] text-cyan-800">
-                Provider listing
-              </p>
-              <h1 className="mt-5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-                {selectedCategory ? `${selectedCategory.title} providers` : "Find Providers"}
-              </h1>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
-                {selectedCategory
-                  ? `Showing static demo providers for ${selectedCategory.title}. The selected category is coming from the URL query param.`
-                  : "Browse and compare repair providers in Brisbane, or choose a category filter to narrow the list."}
+            <div className="w-full max-w-md">
+              <Input
+                label="Filter by suburb"
+                placeholder="UI only for now, e.g. Brisbane CBD"
+                aria-label="Filter providers by suburb"
+              />
+              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                This suburb field is visual only for now and does not filter results yet.
               </p>
             </div>
 
             {selectedCategory ? (
               <Link
                 href="/providers"
-                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800"
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-950/40 dark:text-slate-200 dark:hover:border-teal-300 dark:hover:text-teal-200"
               >
                 Clear category filter
               </Link>
@@ -70,32 +75,32 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
               );
             })}
           </div>
-        </section>
+        </PageIntro>
 
         <section className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {filteredProviders.map((provider) => (
-            <Card key={provider.id} hoverable className="border-white/70 bg-white/55">
+            <Card key={provider.id} hoverable className="border-white/70 bg-white/55 dark:bg-slate-950/42">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-700">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-700 dark:text-cyan-300">
                     {provider.categoryLabel}
                   </p>
-                  <h2 className="mt-3 text-2xl font-semibold text-slate-900">{provider.name}</h2>
+                  <h2 className="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">{provider.name}</h2>
                 </div>
-                <div className="rounded-full bg-teal-100/90 px-4 py-2 text-sm font-semibold text-teal-900">
+                <div className="rounded-full bg-teal-100/90 px-4 py-2 text-sm font-semibold text-teal-900 dark:bg-teal-400/15 dark:text-teal-200">
                   {provider.price}
                 </div>
               </div>
 
-              <p className="mt-5 text-slate-600">{provider.note}</p>
+              <p className="mt-5 text-slate-600 dark:text-slate-300">{provider.note}</p>
 
-              <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-600">
-                <span className="rounded-full border border-white/80 bg-white/75 px-3 py-2">⭐ {provider.rating}</span>
-                <span className="rounded-full border border-white/80 bg-white/75 px-3 py-2">{provider.reviews} reviews</span>
-                <span className="rounded-full border border-white/80 bg-white/75 px-3 py-2">{provider.location}</span>
+              <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-600 dark:text-slate-300">
+                <span className="rounded-full border border-white/80 bg-white/75 px-3 py-2 dark:border-white/10 dark:bg-slate-900/40">⭐ {provider.rating}</span>
+                <span className="rounded-full border border-white/80 bg-white/75 px-3 py-2 dark:border-white/10 dark:bg-slate-900/40">{provider.reviews} reviews</span>
+                <span className="rounded-full border border-white/80 bg-white/75 px-3 py-2 dark:border-white/10 dark:bg-slate-900/40">Suburb: {provider.suburb}</span>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-8 grid gap-3 sm:grid-cols-3">
                 <Link
                   href={`/providers/${provider.id}`}
                   className="inline-flex items-center justify-center rounded-full bg-teal-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-teal-400"
@@ -103,10 +108,16 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
                   View Details
                 </Link>
                 <Link
-                  href={`/providers/${provider.id}/book`}
-                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800"
+                  href={`/providers/${provider.id}/quote`}
+                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200 dark:hover:border-teal-300 dark:hover:text-teal-200"
                 >
-                  Book Now
+                  Request Quote
+                </Link>
+                <Link
+                  href={`/providers/${provider.id}/book`}
+                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200 dark:hover:border-teal-300 dark:hover:text-teal-200"
+                >
+                  Book Service
                 </Link>
               </div>
             </Card>
@@ -115,9 +126,9 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
 
         {filteredProviders.length === 0 ? (
           <section className="mt-10">
-            <Card className="border-white/70 bg-white/55 text-center">
-              <h2 className="text-2xl font-semibold text-slate-900">No providers in this demo category yet</h2>
-              <p className="mt-3 text-slate-600">
+            <Card className="border-white/70 bg-white/55 text-center dark:bg-slate-950/42">
+              <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">No providers in this demo category yet</h2>
+              <p className="mt-3 text-slate-600 dark:text-slate-300">
                 Try another category filter or return to browse all providers.
               </p>
             </Card>
