@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
+import { routes } from "@/config/routes";
 import FeaturedProviders from "@/components/FeaturedProviders";
 
 const featuredCategories = [
@@ -61,9 +63,9 @@ export default function Home() {
                   <a href="#categories" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-slate-900/10 transition hover:bg-slate-100">
                     Browse Services
                   </a>
-                  <a href="/recommender" className="inline-flex items-center justify-center rounded-full border border-white/40 px-6 py-3 text-base font-semibold text-white transition hover:border-white hover:bg-white/10">
+                  <Link href={routes.recommender} className="inline-flex items-center justify-center rounded-full border border-white/40 px-6 py-3 text-base font-semibold text-white transition hover:border-white hover:bg-white/10">
                     Smart Recommender
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -74,12 +76,12 @@ export default function Home() {
                   <p className="mt-2 text-sm text-slate-200">
                     Not sure what service you need? Answer 4 short questions and get the right repair category before you browse providers.
                   </p>
-                  <a
-                    href="/recommender"
+                  <Link
+                    href={routes.recommender}
                     className="mt-4 inline-flex items-center justify-center rounded-full bg-teal-400 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-teal-300"
                   >
                     Try Smart Recommender
-                  </a>
+                  </Link>
                 </div>
 
                 <div className="mt-6 border-t border-white/10 pt-6">
@@ -185,9 +187,9 @@ export default function Home() {
                 <p className="font-semibold">Free listing setup</p>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Enter your business in minutes and start appearing in search results.</p>
               </div>
-              <button className="w-full rounded-3xl bg-cyan-400 px-6 py-4 text-base font-semibold text-slate-950 transition hover:bg-cyan-300">
+              <Link href={routes.listYourBusiness} className="inline-flex w-full items-center justify-center rounded-3xl bg-cyan-400 px-6 py-4 text-base font-semibold text-slate-950 transition hover:bg-cyan-300">
                 List Your Business
-              </button>
+              </Link>
             </div>
           </div>
         </div>

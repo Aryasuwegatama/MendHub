@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { routes } from "@/config/routes";
 import Card from "@/components/ui/Card";
 import PageIntro from "@/components/ui/PageIntro";
-import { getMockProviderById } from "@/lib/mockData";
+import { getMockProviderById, getMockProviderParams } from "@/lib/mockData";
 
 export const metadata: Metadata = {
   title: "Provider Details",
   description: "View provider information, services, and pricing.",
 };
+
+export function generateStaticParams() {
+  return getMockProviderParams();
+}
 
 export default async function ProviderDetailPage({
   params,
@@ -30,7 +35,7 @@ export default async function ProviderDetailPage({
           <div className="mt-10">
             <Card className="bg-white/52 dark:bg-slate-950/42">
               <div className="flex flex-wrap gap-3">
-                <Link href="/providers" className="inline-flex items-center justify-center rounded-full bg-teal-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-teal-400">
+                <Link href={routes.providers.index} className="inline-flex items-center justify-center rounded-full bg-teal-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-teal-400">
                   Back to Providers
                 </Link>
               </div>
@@ -120,10 +125,10 @@ export default async function ProviderDetailPage({
             <Card className="bg-white/52 dark:bg-slate-950/42">
               <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Take the next step</h2>
               <div className="mt-5 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
-                <Link href={`/providers/${id}/quote`} className="inline-flex items-center justify-center rounded-full bg-teal-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-teal-400">
+                <Link href={routes.providers.quote(id)} className="inline-flex items-center justify-center rounded-full bg-teal-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-teal-400">
                   Request Quote
                 </Link>
-                <Link href={`/providers/${id}/book`} className="glass-pill inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-white/80 dark:text-slate-200 dark:hover:bg-white/10">
+                <Link href={routes.providers.book(id)} className="glass-pill inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-white/80 dark:text-slate-200 dark:hover:bg-white/10">
                   Book Service
                 </Link>
               </div>

@@ -3,16 +3,17 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { routes } from "@/config/routes";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Categories", href: "/categories" },
-  { label: "Find My Repair", href: "/recommender" },
-  { label: "Providers", href: "/providers" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "Home", href: routes.home },
+  { label: "Categories", href: routes.categories },
+  { label: "Find My Repair", href: routes.recommender },
+  { label: "Providers", href: routes.providers.index },
+  { label: "About", href: routes.about },
+  { label: "Contact", href: routes.contact },
 ];
 
 export default function Navbar() {
@@ -56,7 +57,7 @@ export default function Navbar() {
             </div>
 
             <Link
-              href="/list-your-business"
+              href={routes.listYourBusiness}
               className="hidden rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-teal-400 sm:block"
             >
               List Your Business
@@ -99,7 +100,7 @@ export default function Navbar() {
             </Link>
           ))}
           <Link
-            href="/list-your-business"
+            href={routes.listYourBusiness}
             className="block rounded-md bg-teal-500 px-3 py-2 text-base font-medium text-slate-950 hover:bg-teal-400 sm:hidden"
             onClick={() => setIsOpen(false)}
           >

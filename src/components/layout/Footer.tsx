@@ -1,20 +1,21 @@
 import Link from "next/link";
+import { routes } from "@/config/routes";
 
 const footerLinks = [
   {
     title: "Explore",
     links: [
-      { label: "Services", href: "/categories" },
-      { label: "Providers", href: "/providers" },
-      { label: "How it works", href: "/about" },
+      { label: "Services", href: routes.categories },
+      { label: "Providers", href: routes.providers.index },
+      { label: "How it works", href: routes.about },
     ],
   },
   {
     title: "Company",
     links: [
-      { label: "About", href: "/about" },
-      { label: "Contact", href: "/contact" },
-      { label: "Privacy", href: "/policies" },
+      { label: "About", href: routes.about },
+      { label: "Contact", href: routes.contact },
+      { label: "Privacy", href: routes.policies },
     ],
   },
 ];
@@ -24,7 +25,7 @@ export default function Footer() {
     <footer className="px-4 py-12 text-slate-700 dark:text-slate-300 sm:px-6 lg:px-8">
       <div className="glass-panel-strong mx-auto flex max-w-6xl flex-col gap-10 rounded-[2rem] px-6 py-10 lg:flex-row lg:justify-between lg:px-10">
         <div className="space-y-4">
-          <Link href="/" className="text-xl font-bold text-slate-950 dark:text-white">
+          <Link href={routes.home} className="text-xl font-bold text-slate-950 dark:text-white">
             MendHub
           </Link>
           <p className="max-w-md text-slate-600 dark:text-slate-400">

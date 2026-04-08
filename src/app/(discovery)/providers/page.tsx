@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { routes } from "@/config/routes";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import PageIntro from "@/components/ui/PageIntro";
@@ -49,7 +50,7 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
 
             {selectedCategory ? (
               <Link
-                href="/providers"
+                href={routes.providers.index}
                 className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-950/40 dark:text-slate-200 dark:hover:border-teal-300 dark:hover:text-teal-200"
               >
                 Clear category filter
@@ -64,7 +65,7 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
               return (
                 <Link
                   key={category.key}
-                  href={`/providers?category=${category.key}`}
+                  href={routes.providers.byCategory(category.key)}
                   className={isActive
                     ? "inline-flex items-center rounded-full border border-teal-300 bg-teal-100/90 px-4 py-2 text-sm font-semibold text-teal-900"
                     : "inline-flex items-center rounded-full border border-white/70 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800"
@@ -102,19 +103,19 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
 
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
                 <Link
-                  href={`/providers/${provider.id}`}
+                  href={routes.providers.details(provider.id)}
                   className="inline-flex items-center justify-center rounded-full bg-teal-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-teal-400"
                 >
                   View Details
                 </Link>
                 <Link
-                  href={`/providers/${provider.id}/quote`}
+                  href={routes.providers.quote(provider.id)}
                   className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200 dark:hover:border-teal-300 dark:hover:text-teal-200"
                 >
                   Request Quote
                 </Link>
                 <Link
-                  href={`/providers/${provider.id}/book`}
+                  href={routes.providers.book(provider.id)}
                   className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200 dark:hover:border-teal-300 dark:hover:text-teal-200"
                 >
                   Book Service
