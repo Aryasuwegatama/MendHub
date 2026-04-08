@@ -90,15 +90,34 @@ export default function Home() {
                   <a href="#categories" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-slate-900/10 transition hover:bg-slate-100">
                     Browse Services
                   </a>
-                  <a href="#providers" className="inline-flex items-center justify-center rounded-full border border-white/40 px-6 py-3 text-base font-semibold text-white transition hover:border-white hover:bg-white/10">
-                    Find My Repair
+                  <a href="/recommender" className="inline-flex items-center justify-center rounded-full border border-white/40 px-6 py-3 text-base font-semibold text-white transition hover:border-white hover:bg-white/10">
+                    Smart Recommender
                   </a>
                 </div>
               </div>
 
               <div className="rounded-[2rem] border border-white/10 bg-slate-950/90 p-6 shadow-2xl shadow-slate-950/20">
-                <h2 className="text-xl font-semibold text-white">Quick search</h2>
-                <form className="mt-6 grid gap-4">
+                <div className="rounded-3xl border border-teal-400/30 bg-gradient-to-br from-teal-500/20 to-cyan-500/10 p-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-200">Innovation Feature</p>
+                  <h2 className="mt-2 text-2xl font-semibold text-white">Smart Category Recommender</h2>
+                  <p className="mt-2 text-sm text-slate-200">
+                    Not sure what service you need? Answer 4 short questions and get the right repair category before you browse providers.
+                  </p>
+                  <a
+                    href="/recommender"
+                    className="mt-4 inline-flex items-center justify-center rounded-full bg-teal-400 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-teal-300"
+                  >
+                    Try Smart Recommender
+                  </a>
+                </div>
+
+                <div className="mt-6 border-t border-white/10 pt-6">
+                  <div className="mb-3 flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-white">Quick search</h3>
+                    <span className="rounded-full bg-slate-800 px-3 py-1 text-xs font-medium text-slate-300">Secondary</span>
+                  </div>
+
+                  <form className="grid gap-4">
                   <label className="block">
                     <span className="sr-only">Search services</span>
                     <input
@@ -120,7 +139,8 @@ export default function Home() {
                   <button type="button" className="rounded-3xl bg-teal-400 px-6 py-3 text-base font-semibold text-slate-950 transition hover:bg-teal-300">
                     Search now
                   </button>
-                </form>
+                  </form>
+                </div>
                 <div className="mt-8 grid gap-3 rounded-3xl bg-teal-950/80 p-4 text-slate-300 sm:grid-cols-2">
                   <div>
                     <p className="text-sm uppercase tracking-[0.2em] text-cyan-300">Verified pros</p>
