@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Card from "@/components/ui/Card";
 import PageIntro from "@/components/ui/PageIntro";
 import PageShell from "@/components/ui/PageShell";
+import BusinessSubmissionForm from "@/components/forms/BusinessSubmissionForm";
 
 export const metadata: Metadata = {
   title: "List Your Business",
@@ -28,8 +29,12 @@ export default function ListBusinessPage() {
           </Card>
           <Card variant="default">
             <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Next step</h2>
-            <p className="mt-3 text-slate-600 dark:text-slate-300">Complete the provider submission flow when that form is ready.</p>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">Complete the form below to submit your business for review.</p>
           </Card>
+        </div>
+
+        <div className="mt-16">
+          <BusinessSubmissionForm />
         </div>
     </PageShell>
   );
