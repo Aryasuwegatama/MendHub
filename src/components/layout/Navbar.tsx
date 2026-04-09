@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils";
 
 const navLinks = [
   { label: "Home", href: routes.home },
-  { label: "Categories", href: routes.categories },
   { label: "Find My Repair", href: routes.recommender },
   { label: "Providers", href: routes.providers.index },
   { label: "About", href: routes.about },

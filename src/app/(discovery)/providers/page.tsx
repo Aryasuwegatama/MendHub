@@ -60,7 +60,11 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
             ) : null}
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-10">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Filter by category</h2>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Select a repair category to narrow down providers.</p>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-3">
             {categories.map((category) => {
               const isActive = category.key === selectedCategory?.key;
 

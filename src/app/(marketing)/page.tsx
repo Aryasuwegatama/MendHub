@@ -3,36 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { routes } from "@/config/routes";
+import { categories } from "@/lib/mockData";
 import SectionLabel from "@/components/ui/SectionLabel";
 import FeaturedProviders from "@/components/FeaturedProviders";
 import LinkButton from "@/components/ui/LinkButton";
 
-const featuredCategories = [
-  {
-    title: "Phone Repair",
-    description: "Screen, battery, and charging fixes.",
-    icon: "📱",
-    accent: "from-teal-400 to-teal-600",
-  },
-  {
-    title: "Laptop Repair",
-    description: "Hardware, software and performance help.",
-    icon: "💻",
-    accent: "from-teal-400 to-teal-600",
-  },
-  {
-    title: "Appliance Repair",
-    description: "Fast home appliance service and repairs.",
-    icon: "🧰",
-    accent: "from-teal-500 to-slate-800",
-  },
-  {
-    title: "Bike & Gear",
-    description: "Mobile repair for cycles and small equipment.",
-    icon: "🚲",
-    accent: "from-teal-500 to-teal-700",
-  },
-];
+
 
 const recommender = [
   "Phone screen replacement",
@@ -138,15 +114,17 @@ export default function Home() {
             <p className="mx-auto mt-3 max-w-2xl text-slate-600 dark:text-slate-300">Choose a repair type and get matched to local providers quickly.</p>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {featuredCategories.map((category) => (
-              <article key={category.title} className="glass-panel rounded-3xl p-6 transition hover:-translate-y-1 hover:shadow-xl">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            {categories.map((category) => (
+              <Link key={category.key} href={category.href} className="glass-panel group block rounded-3xl p-6 transition hover:-translate-y-1 hover:shadow-xl">
                 <div className={`mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${category.accent} text-2xl`}>
                   {category.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-white">{category.title}</h3>
+                <h3 className="text-xl font-semibold text-slate-900 transition group-hover:text-teal-800 dark:text-white dark:group-hover:text-teal-300">
+                  {category.title}
+                </h3>
                 <p className="mt-3 text-slate-600 dark:text-slate-300">{category.description}</p>
-              </article>
+              </Link>
             ))}
           </div>
         </div>
