@@ -48,6 +48,6 @@ extract_pdfs.py
 # drizzle
 /drizzle/
 
-AGENT.md
+AGENTS.md
 CLAUDE.md
 DEVELOPMENT_GUIDE.md
