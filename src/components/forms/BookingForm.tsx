@@ -3,20 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { routes } from "@/config/routes";
+import { bookingSchema, type BookingFormValues } from "@/lib/validations/booking";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import SectionLabel from "@/components/ui/SectionLabel";
 import Input from "@/components/ui/Input";
-
-type BookingFormValues = {
-  name: string;
-  email: string;
-  phone: string;
-  suburb: string;
-  preferredDate: string;
-  issueSummary: string;
-};
 
 interface BookingFormProps {
   providerId: string;
@@ -35,6 +28,7 @@ export default function BookingForm({ providerId }: BookingFormProps) {
     formState: { errors, isSubmitting },
     reset,
   } = useForm<BookingFormValues>({
+    resolver: zodResolver(bookingSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -53,12 +47,27 @@ export default function BookingForm({ providerId }: BookingFormProps) {
         throw new Error("You appear to be offline. Please reconnect and try again.");
       }
 
-      await Promise.resolve();
-
-      console.log("Booking form submitted:", {
-        providerId,
-        ...data,
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          providerId,
+          customerName: data.name,
+          customerEmail: data.email,
+          customerPhone: data.phone,
+          serviceAddress: data.suburb,
+          bookingDate: data.preferredDate,
+          issueDescription: data.issueSummary,
+        }),
       });
+
+      const json = await res.json();
+
+      if (!res.ok || !json.success) {
+        throw new Error(json.error ?? "Submission failed. Please try again.");
+      }
 
       reset();
       router.push(routes.payment);
@@ -85,9 +94,7 @@ export default function BookingForm({ providerId }: BookingFormProps) {
           label="Name"
           placeholder="Your full name"
           error={errors.name?.message}
-          {...register("name", {
-            required: "Name is required.",
-          })}
+          {...register("name")}
         />
 
         <Input
@@ -95,13 +102,7 @@ export default function BookingForm({ providerId }: BookingFormProps) {
           type="email"
           placeholder="you@example.com"
           error={errors.email?.message}
-          {...register("email", {
-            required: "Email is required.",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "Please enter a valid email address.",
-            },
-          })}
+          {...register("email")}
         />
 
         <div className="grid gap-5 sm:grid-cols-2">
@@ -110,18 +111,14 @@ export default function BookingForm({ providerId }: BookingFormProps) {
             type="tel"
             placeholder="0400 000 000"
             error={errors.phone?.message}
-            {...register("phone", {
-              required: "Phone is required.",
-            })}
+            {...register("phone")}
           />
 
           <Input
             label="Suburb"
             placeholder="e.g. Brisbane City"
             error={errors.suburb?.message}
-            {...register("suburb", {
-              required: "Suburb is required.",
-            })}
+            {...register("suburb")}
           />
         </div>
 
@@ -129,9 +126,7 @@ export default function BookingForm({ providerId }: BookingFormProps) {
           label="Preferred Date"
           type="date"
           error={errors.preferredDate?.message}
-          {...register("preferredDate", {
-            required: "Preferred date is required.",
-          })}
+          {...register("preferredDate")}
         />
 
         <div className="space-y-1.5">
@@ -143,9 +138,7 @@ export default function BookingForm({ providerId }: BookingFormProps) {
             rows={5}
             placeholder="Briefly describe the repair issue"
             className="glass-input w-full rounded-xl px-4 py-2.5 transition focus:outline-none focus:ring-2 focus:ring-[var(--surface-ring)]"
-            {...register("issueSummary", {
-              required: "Issue summary is required.",
-            })}
+            {...register("issueSummary")}
           />
           {errors.issueSummary?.message && (
             <p className="text-sm text-red-600">{errors.issueSummary.message}</p>
