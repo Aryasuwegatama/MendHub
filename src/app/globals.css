@@ -87,3 +87,9 @@ body {
 .glass-input::placeholder {
   color: var(--text-muted);
 }
+
+/* Ensure native select option elements are readable in both modes */
+.glass-input option {
+  background-color: var(--background);
+  color: var(--foreground);
+}

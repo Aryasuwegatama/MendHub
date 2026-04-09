@@ -39,7 +39,7 @@ export default function Footer() {
         <div className="grid gap-8 sm:grid-cols-3 lg:grid-cols-4">
           {footerLinks.map((section) => (
             <div key={section.title}>
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-500">
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-600 dark:text-slate-400">
                 {section.title}
               </p>
               <ul className="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-400">
@@ -57,7 +57,7 @@ export default function Footer() {
             </div>
           ))}
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-500">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-600 dark:text-slate-400">
               Contact
             </p>
             <ul className="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-400">
@@ -67,7 +67,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-500">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-600 dark:text-slate-400">
               Follow
             </p>
             <div className="mt-4 flex items-center gap-3 text-2xl text-slate-500 dark:text-slate-400">

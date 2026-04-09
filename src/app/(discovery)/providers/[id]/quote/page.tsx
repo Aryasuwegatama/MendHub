@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import QuoteRequestForm from "@/components/forms/QuoteRequestForm";
 import PageIntro from "@/components/ui/PageIntro";
+import PageShell from "@/components/ui/PageShell";
 import { getMockProviderParams } from "@/lib/mockData";
 
 export const metadata: Metadata = {
@@ -20,8 +21,7 @@ export default async function QuoteRequestPage({
   const { id } = await params;
 
   return (
-    <div className="min-h-screen px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
+    <PageShell>
         <PageIntro
           badge="Request a Quote"
           title="Request a quote with a clear, simple form."
@@ -31,7 +31,6 @@ export default async function QuoteRequestPage({
         <div className="mt-10">
           <QuoteRequestForm providerId={id} />
         </div>
-      </div>
-    </div>
+    </PageShell>
   );
 }

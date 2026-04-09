@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import { routes } from "@/config/routes";
+import SectionLabel from "@/components/ui/SectionLabel";
 import FeaturedProviders from "@/components/FeaturedProviders";
+import LinkButton from "@/components/ui/LinkButton";
 
 const featuredCategories = [
   {
@@ -63,9 +65,7 @@ export default function Home() {
                   <a href="#categories" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-slate-900/10 transition hover:bg-slate-100">
                     Browse Services
                   </a>
-                  <Link href={routes.recommender} className="inline-flex items-center justify-center rounded-full border border-white/40 px-6 py-3 text-base font-semibold text-white transition hover:border-white hover:bg-white/10">
-                    Smart Recommender
-                  </Link>
+                  <LinkButton href={routes.recommender} variant="outline">Smart Recommender</LinkButton>
                 </div>
               </div>
 
@@ -133,7 +133,7 @@ export default function Home() {
       <section id="categories" className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-teal-700 dark:text-teal-300">Service categories</p>
+            <SectionLabel>Service categories</SectionLabel>
             <h2 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">Browse by category</h2>
             <p className="mx-auto mt-3 max-w-2xl text-slate-600 dark:text-slate-300">Choose a repair type and get matched to local providers quickly.</p>
           </div>
@@ -178,7 +178,7 @@ export default function Home() {
         <div className="glass-panel-strong mx-auto max-w-6xl rounded-[2rem] p-10 text-slate-900 dark:text-white sm:p-12">
           <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-700 dark:text-cyan-300">List Your Business</p>
+              <SectionLabel>List Your Business</SectionLabel>
               <h2 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">Grow your repair business with MendHub</h2>
               <p className="mt-4 text-slate-600 dark:text-slate-300">Join the local marketplace, reach more customers, and get booked through a simple onboarding flow.</p>
             </div>
@@ -187,9 +187,9 @@ export default function Home() {
                 <p className="font-semibold">Free listing setup</p>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Enter your business in minutes and start appearing in search results.</p>
               </div>
-              <Link href={routes.listYourBusiness} className="inline-flex w-full items-center justify-center rounded-3xl bg-cyan-400 px-6 py-4 text-base font-semibold text-slate-950 transition hover:bg-cyan-300">
+              <LinkButton href={routes.listYourBusiness} size="lg" fullWidth className="!rounded-3xl">
                 List Your Business
-              </Link>
+              </LinkButton>
             </div>
           </div>
         </div>

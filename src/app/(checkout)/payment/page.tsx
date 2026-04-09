@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Badge from "@/components/ui/Badge";
-import { routes } from "@/config/routes";
 import Card from "@/components/ui/Card";
+import { routes } from "@/config/routes";
+import InfoBlock from "@/components/ui/InfoBlock";
 import PageIntro from "@/components/ui/PageIntro";
+import PageShell from "@/components/ui/PageShell";
+import PriceBadge from "@/components/ui/PriceBadge";
+import SectionLabel from "@/components/ui/SectionLabel";
 import { checkoutBookingDetails, paymentMethodOptions, receiptLineItems } from "@/lib/checkoutData";
 
 export const metadata: Metadata = {
@@ -13,8 +17,7 @@ export const metadata: Metadata = {
 
 export default function PaymentPage() {
   return (
-    <div className="min-h-screen px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
+    <PageShell>
         <PageIntro
           badge="Payment"
           title="Pay the booking deposit to secure the repair visit."
@@ -27,41 +30,23 @@ export default function PaymentPage() {
         </PageIntro>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <Card className="bg-white/52 dark:bg-slate-950/42">
+          <Card variant="default">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">
-                  Booking summary
-                </p>
+                <SectionLabel>Booking summary</SectionLabel>
                 <h2 className="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">
                   {checkoutBookingDetails.service}
                 </h2>
               </div>
-              <div className="rounded-full bg-teal-100/90 px-4 py-2 text-sm font-semibold text-teal-900 dark:bg-teal-400/15 dark:text-teal-200">
-                {checkoutBookingDetails.bookingId}
-              </div>
+              <PriceBadge>{checkoutBookingDetails.bookingId}</PriceBadge>
             </div>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="glass-panel-muted rounded-2xl p-4">
-                <p className="text-sm font-semibold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">
-                  Provider
-                </p>
-                <p className="mt-2 text-base font-semibold text-slate-900 dark:text-white">
-                  {checkoutBookingDetails.providerName}
-                </p>
-              </div>
-              <div className="glass-panel-muted rounded-2xl p-4">
-                <p className="text-sm font-semibold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">
-                  Visit window
-                </p>
-                <p className="mt-2 text-base font-semibold text-slate-900 dark:text-white">
-                  {checkoutBookingDetails.preferredDate}
-                </p>
-                <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                  {checkoutBookingDetails.arrivalWindow}
-                </p>
-              </div>
+              <InfoBlock label="Provider">{checkoutBookingDetails.providerName}</InfoBlock>
+              <InfoBlock label="Visit window">
+                {checkoutBookingDetails.preferredDate}
+                <p className="mt-1 text-sm font-normal text-slate-600 dark:text-slate-300">{checkoutBookingDetails.arrivalWindow}</p>
+              </InfoBlock>
             </div>
 
             <dl className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -112,10 +97,8 @@ export default function PaymentPage() {
             </div>
           </Card>
 
-          <Card className="bg-white/52 dark:bg-slate-950/42">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">
-              Payment method
-            </p>
+          <Card variant="default">
+            <SectionLabel>Payment method</SectionLabel>
             <h2 className="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">
               Select how you would like to pay the deposit.
             </h2>
@@ -175,7 +158,6 @@ export default function PaymentPage() {
             </div>
           </Card>
         </div>
-      </div>
-    </div>
+    </PageShell>
   );
 }
