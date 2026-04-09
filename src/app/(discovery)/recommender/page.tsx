@@ -269,7 +269,7 @@ export default function RecommenderPage() {
             </div>
           </Card>
 
-          <Card className="bg-slate-800/90 text-white dark:bg-slate-950/82">
+          <Card className="!bg-slate-800/90 text-white dark:!bg-slate-950/82">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-300">Recommended outcome</p>
             {step <= TOTAL_STEPS ? (
               <>
