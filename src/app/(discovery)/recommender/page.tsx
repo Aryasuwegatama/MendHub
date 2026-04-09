@@ -3,8 +3,10 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { routes } from "@/config/routes";
+import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import PageShell from "@/components/ui/PageShell";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 
@@ -180,10 +182,9 @@ export default function RecommenderPage() {
   const ctaLabel = answers.nextStep ? NEXT_STEP_TO_CTA[answers.nextStep] : "See Providers";
 
   return (
-    <div className="min-h-screen px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
+    <PageShell>
         <div className="mb-10 max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-teal-700 dark:text-teal-300">MVP innovation feature</p>
+          <SectionLabel>MVP innovation feature</SectionLabel>
           <h1 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">Smart Category Recommender</h1>
           <p className="mt-4 text-slate-600 dark:text-slate-300">
             If you are unsure what repair service you need, this guided flow recommends the most suitable category before you continue.
@@ -191,8 +192,8 @@ export default function RecommenderPage() {
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-          <Card className="bg-white/48 dark:bg-slate-950/45">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">Smart category recommender</p>
+          <Card variant="default">
+            <SectionLabel>Smart category recommender</SectionLabel>
             <h2 className="mt-3 text-2xl font-bold text-slate-900 dark:text-white">Answer 4 short questions</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
               This guided flow helps you choose the right repair category before browsing providers.
@@ -269,19 +270,19 @@ export default function RecommenderPage() {
             </div>
           </Card>
 
-          <Card className="!bg-slate-800/90 text-white dark:!bg-slate-950/82">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-300">Recommended outcome</p>
+          <Card variant="default">
+            <SectionLabel>Recommended outcome</SectionLabel>
             {step <= TOTAL_STEPS ? (
               <>
-                <h3 className="mt-3 text-xl font-semibold">Your recommendation will appear here</h3>
-                <p className="mt-3 text-slate-300">
+                <h3 className="mt-3 text-xl font-semibold text-slate-900 dark:text-white">Your recommendation will appear here</h3>
+                <p className="mt-3 text-slate-600 dark:text-slate-300">
                   Complete all 4 questions to get a category match and your best next step.
                 </p>
               </>
             ) : (
               <>
-                <h3 className="mt-3 text-2xl font-bold">{recommendation}</h3>
-                <p className="mt-4 text-slate-300">
+                <h3 className="mt-3 text-2xl font-bold text-slate-900 dark:text-white">{recommendation}</h3>
+                <p className="mt-4 text-slate-600 dark:text-slate-300">
                   Suggested next step: {ctaLabel}
                   {answers.suburb.trim() ? ` in ${answers.suburb.trim()}` : ""}.
                 </p>
@@ -292,7 +293,7 @@ export default function RecommenderPage() {
                   >
                     {ctaLabel}
                   </Link>
-                  <Button type="button" variant="ghost" size="md" className="text-slate-200 hover:bg-white/10 hover:text-white" onClick={handleReset}>
+                  <Button type="button" variant="ghost" size="md" className="text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-white/10 dark:hover:text-white" onClick={handleReset}>
                     Start Again
                   </Button>
                 </div>
@@ -300,7 +301,6 @@ export default function RecommenderPage() {
             )}
           </Card>
         </div>
-      </div>
-    </div>
+    </PageShell>
   );
 }

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { routes } from "@/config/routes";
+import SectionLabel from "@/components/ui/SectionLabel";
+import PriceBadge from "@/components/ui/PriceBadge";
 
 type FeaturedProvider = {
   id: string;
@@ -55,9 +57,7 @@ export default function FeaturedProviders() {
     <section id="providers" className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-teal-700 dark:text-teal-300">
-            Featured Providers
-          </p>
+          <SectionLabel>Featured Providers</SectionLabel>
           <h2 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">
             Featured Providers
           </h2>
@@ -94,9 +94,7 @@ export default function FeaturedProviders() {
                   {provider.description}
                 </p>
 
-                <div className="mt-5 inline-flex rounded-full bg-teal-100/90 px-4 py-2 text-sm font-semibold text-teal-900 dark:bg-teal-400/15 dark:text-teal-200">
-                  {provider.price}
-                </div>
+                <PriceBadge className="mt-5">{provider.price}</PriceBadge>
 
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   <Link

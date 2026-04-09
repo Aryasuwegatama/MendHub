@@ -4,6 +4,9 @@ import { routes } from "@/config/routes";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import PageIntro from "@/components/ui/PageIntro";
+import PageShell from "@/components/ui/PageShell";
+import PriceBadge from "@/components/ui/PriceBadge";
+import SectionLabel from "@/components/ui/SectionLabel";
 import { categories, mockProviders } from "@/lib/mockData";
 
 export const metadata: Metadata = {
@@ -27,8 +30,7 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
     : mockProviders;
 
   return (
-    <div className="min-h-screen px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
+    <PageShell>
         <PageIntro
           badge="Provider Listing"
           title={selectedCategory ? `${selectedCategory.title} providers` : "Find Providers"}
@@ -80,17 +82,13 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
 
         <section className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {filteredProviders.map((provider) => (
-            <Card key={provider.id} hoverable className="border-white/70 bg-white/55 dark:bg-slate-950/42">
+            <Card key={provider.id} hoverable variant="default" className="border-white/70">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-700 dark:text-cyan-300">
-                    {provider.categoryLabel}
-                  </p>
+                  <SectionLabel>{provider.categoryLabel}</SectionLabel>
                   <h2 className="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">{provider.name}</h2>
                 </div>
-                <div className="rounded-full bg-teal-100/90 px-4 py-2 text-sm font-semibold text-teal-900 dark:bg-teal-400/15 dark:text-teal-200">
-                  {provider.price}
-                </div>
+                <PriceBadge>{provider.price}</PriceBadge>
               </div>
 
               <p className="mt-5 text-slate-600 dark:text-slate-300">{provider.note}</p>
@@ -127,7 +125,7 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
 
         {filteredProviders.length === 0 ? (
           <section className="mt-10">
-            <Card className="border-white/70 bg-white/55 text-center dark:bg-slate-950/42">
+            <Card variant="default" className="border-white/70 text-center">
               <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">No providers in this demo category yet</h2>
               <p className="mt-3 text-slate-600 dark:text-slate-300">
                 Try another category filter or return to browse all providers.
@@ -135,7 +133,6 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
             </Card>
           </section>
         ) : null}
-      </div>
-    </div>
+    </PageShell>
   );
 }

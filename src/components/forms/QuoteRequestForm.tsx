@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import SectionLabel from "@/components/ui/SectionLabel";
 import Input from "@/components/ui/Input";
 
 type QuoteRequestFormValues = {
@@ -68,11 +69,9 @@ export default function QuoteRequestForm({ providerId }: QuoteRequestFormProps) 
   };
 
   return (
-    <Card className="mx-auto max-w-3xl bg-white/52 dark:bg-slate-950/42">
+    <Card variant="default" className="mx-auto max-w-3xl">
       <div className="mb-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">
-          Quote request
-        </p>
+        <SectionLabel>Quote request</SectionLabel>
         <h2 className="mt-3 text-2xl font-bold text-slate-900 dark:text-white">
           Request a Quote
         </h2>

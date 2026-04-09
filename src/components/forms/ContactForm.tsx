@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
@@ -60,9 +61,9 @@ export default function ContactForm() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-      <Card className="border-white/60 bg-white/52 dark:bg-slate-950/42">
+      <Card variant="default" className="border-white/60">
         <div className="mb-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">Contact form</p>
+          <SectionLabel>Contact form</SectionLabel>
           <h2 className="mt-2 text-2xl font-bold text-slate-900 dark:text-white">Send us a message</h2>
           <p className="mt-2 text-slate-600 dark:text-slate-300">We usually reply within one business day.</p>
         </div>

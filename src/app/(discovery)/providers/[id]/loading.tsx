@@ -1,7 +1,8 @@
+import PageShell from "@/components/ui/PageShell";
+
 export default function ProviderRouteLoading() {
   return (
-    <div className="min-h-screen px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl animate-pulse">
+    <PageShell className="animate-pulse">
         <div className="rounded-[2rem] border border-white/20 bg-white/55 p-8 dark:border-white/10 dark:bg-slate-950/42">
           <div className="h-4 w-36 rounded-full bg-slate-200 dark:bg-slate-800" />
           <div className="mt-5 h-12 w-full max-w-2xl rounded-2xl bg-slate-200 dark:bg-slate-800" />
@@ -36,7 +37,6 @@ export default function ProviderRouteLoading() {
             <div className="h-72 rounded-[2rem] border border-white/20 bg-white/55 dark:border-white/10 dark:bg-slate-950/42" />
           </div>
         </div>
-      </div>
-    </div>
+    </PageShell>
   );
 }

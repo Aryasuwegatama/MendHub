@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Card from "@/components/ui/Card";
+import PageShell from "@/components/ui/PageShell";
 import { categories } from "@/lib/mockData";
 
 export const metadata: Metadata = {
@@ -10,8 +11,7 @@ export const metadata: Metadata = {
 
 export default function CategoriesPage() {
   return (
-    <div className="min-h-screen px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
+    <PageShell>
         <section className="overflow-hidden rounded-[2rem] border border-white/60 bg-white/50 px-6 py-12 shadow-xl shadow-slate-900/5 backdrop-blur-xl sm:px-10 dark:border-white/10 dark:bg-slate-950/60">
           <p className="inline-flex rounded-full border border-teal-200 bg-teal-50/80 px-4 py-1 text-sm font-semibold uppercase tracking-[0.2em] text-teal-800">
             Browse categories
@@ -27,7 +27,7 @@ export default function CategoriesPage() {
         <section className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {categories.map((category) => (
             <Link key={category.key} href={category.href} className="group block">
-              <Card hoverable className="h-full overflow-hidden border-white/70 bg-white/55 dark:border-white/10 dark:bg-slate-950/50">
+              <Card hoverable variant="default" className="h-full overflow-hidden border-white/70">
                 <div className={`inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br ${category.accent} text-3xl shadow-lg shadow-slate-900/10`}>
                   {category.icon}
                 </div>
@@ -42,7 +42,6 @@ export default function CategoriesPage() {
             </Link>
           ))}
         </section>
-      </div>
-    </div>
+    </PageShell>
   );
 }
