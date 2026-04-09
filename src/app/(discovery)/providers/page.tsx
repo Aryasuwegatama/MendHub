@@ -68,7 +68,7 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
                   href={routes.providers.byCategory(category.key)}
                   className={isActive
                     ? "inline-flex items-center rounded-full border border-teal-300 bg-teal-100/90 px-4 py-2 text-sm font-semibold text-teal-900"
-                    : "inline-flex items-center rounded-full border border-white/70 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800"
+                    : "inline-flex items-center rounded-full border border-white/70 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200 dark:hover:border-teal-400 dark:hover:text-teal-200"
                   }
                 >
                   {category.title}
