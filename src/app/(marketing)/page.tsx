@@ -6,20 +6,13 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import LinkButton from "@/components/ui/LinkButton";
 import FeaturedProviders from "@/components/FeaturedProviders";
 // Client Component — isolated so this page can stay a Server Component
-import HeroSearchForm from "@/components/HeroSearchForm";
+import HeroRecommenderPanel from "@/components/HeroRecommenderPanel";
 
 export const metadata: Metadata = {
   title: "MendHub — Find Trusted Repair Services in Brisbane",
   description:
     "Search by category, suburb, or service type and compare top-rated repair providers across Brisbane.",
 };
-
-const recommender = [
-  "Phone screen replacement",
-  "Washer repair",
-  "Laptop tune-up",
-  "Faulty power outlet",
-];
 
 /**
  * Home page — Server Component.
@@ -56,7 +49,7 @@ export default function Home() {
               </div>
 
               {/* Interactive search panel — Client Component */}
-              <HeroSearchForm />
+              <HeroRecommenderPanel />
             </div>
           </div>
         </div>
@@ -92,21 +85,32 @@ export default function Home() {
       {/* Recommender CTA section */}
       <section className="bg-teal-950/95 px-4 py-16 text-white sm:px-6 lg:px-8 dark:bg-slate-950/85">
         <div className="mx-auto max-w-6xl">
-          <div className="grid gap-8 lg:grid-cols-[1.3fr_0.7fr] lg:items-center">
+          <div className="grid gap-10 lg:grid-cols[1.1fr_0.9fr] lg:items-center">
             <div>
-              <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-teal-300">Smart category recommender</p>
+              <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-teal-300">Concierge Matching</p>
               <h2 className="text-3xl font-bold sm:text-4xl">Not sure where to start?</h2>
-              <p className="mt-4 max-w-xl text-slate-300">
-                Use our most common repair recommendations to find the right service type for your needs.
+              <p className="mt-4 max-w-xl text-lg text-slate-300">
+                Skip the search bar. Tell us what's broken, your precise issue, and your location, and we'll instantly match you with accurate pricing from exact-fit local providers.
               </p>
+              <div className="mt-8">
+                <LinkButton href={routes.recommender} className="!rounded-3xl border border-white/20 hover:border-white/40">
+                  Try the Smart Recommender
+                </LinkButton>
+              </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {recommender.map((item) => (
-                <div key={item} className="rounded-3xl border border-white/10 bg-white/8 p-5 text-slate-100 backdrop-blur-xl">
-                  <p className="text-sm font-semibold text-cyan-200">Recommended</p>
-                  <p className="mt-3 text-base leading-7">{item}</p>
-                </div>
-              ))}
+            <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-1">
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-slate-100 backdrop-blur-xl">
+                <p className="text-sm font-bold text-cyan-300">1. Select Item</p>
+                <p className="mt-1 text-base">What device or item needs fixing?</p>
+              </div>
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-slate-100 backdrop-blur-xl">
+                <p className="text-sm font-bold text-cyan-300">2. Specify Problem</p>
+                <p className="mt-1 text-base">We map common symptoms to distinct services.</p>
+              </div>
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-slate-100 backdrop-blur-xl">
+                <p className="text-sm font-bold text-cyan-300">3. Add Location</p>
+                <p className="mt-1 text-base">Get instant, inline results for your suburb.</p>
+              </div>
             </div>
           </div>
         </div>
