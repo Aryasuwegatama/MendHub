@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { routes } from "@/config/routes";
 import ThemeToggle from "@/components/theme/ThemeToggle";
+import { useTheme } from "@/components/theme/ThemeProvider";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -17,22 +18,33 @@ const navLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   return (
     <nav className="sticky top-0 z-50 border-b border-white/40 bg-white/40 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/45">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="relative flex h-16 items-center justify-between">
-          <div className="flex items-center">
-            {/* Mobile Theme Toggle (Left side) */}
-            <div className="md:hidden">
-              <ThemeToggle compact />
-            </div>
+        <div className="flex h-16 items-center justify-between">
 
-            {/* Logo (Centered on mobile, left on desktop) */}
-            <Link 
-              href="/" 
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 md:static md:translate-x-0 md:translate-y-0"
-            >
+          {/* ── LEFT ZONE ─────────────────────────────────────────── */}
+
+          {/* Mobile: icon-only logo + brand text */}
+          <Link href="/" className="flex items-center gap-2 md:hidden">
+            <Image
+              src="/MendHub Logo (Icon only).png"
+              alt="MendHub"
+              width={32}
+              height={32}
+              className="h-8 w-8 object-contain"
+              priority
+            />
+            <span className="text-base font-bold text-slate-950 dark:text-white">
+              MendHub
+            </span>
+          </Link>
+
+          {/* Desktop: full logo + nav links */}
+          <div className="hidden md:flex md:items-center">
+            <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/MendHub_Logo_transparent_background.png"
                 alt="MendHub Logo"
@@ -42,9 +54,6 @@ export default function Navbar() {
                 priority
               />
             </Link>
-
-          {/* Desktop Nav */}
-          <div className="hidden md:block">
             <div className="ml-10 flex items-baseline gap-6">
               {navLinks.map((link) => (
                 <Link
@@ -57,24 +66,33 @@ export default function Navbar() {
               ))}
             </div>
           </div>
-        </div>
 
-        {/* CTA & Mobile Menu Button */}
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex">
-              <ThemeToggle />
-            </div>
+          {/* ── RIGHT ZONE ────────────────────────────────────────── */}
 
-            <Link
-              href={routes.listYourBusiness}
-              className="hidden rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-teal-400 sm:block"
+          {/* Mobile: icon-only theme toggle + hamburger */}
+          <div className="flex items-center gap-1 md:hidden">
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="inline-flex items-center justify-center rounded-full p-2 text-slate-600 transition hover:bg-white/50 dark:text-slate-300 dark:hover:bg-slate-800"
+              aria-label="Toggle theme"
             >
-              List Your Business
-            </Link>
+              {theme === "dark" ? (
+                /* Sun icon — shown in dark mode to switch to light */
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2.5v2.2M12 19.3v2.2M4.7 4.7l1.5 1.5M17.8 17.8l1.5 1.5M2.5 12h2.2M19.3 12h2.2M4.7 19.3l1.5-1.5M17.8 6.2l1.5-1.5" strokeLinecap="round" />
+                </svg>
+              ) : (
+                /* Moon icon — shown in light mode to switch to dark */
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path d="M21 12.8A8.9 8.9 0 1 1 11.2 3a7.1 7.1 0 0 0 9.8 9.8Z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </button>
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center rounded-md p-2 text-slate-500 hover:bg-white/50 hover:text-slate-950 focus:outline-none dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white md:hidden"
+              className="inline-flex items-center justify-center rounded-md p-2 text-slate-500 hover:bg-white/50 hover:text-slate-950 focus:outline-none dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? (
@@ -88,6 +106,18 @@ export default function Navbar() {
               )}
             </button>
           </div>
+
+          {/* Desktop: theme pill toggle + list CTA */}
+          <div className="hidden md:flex md:items-center md:gap-4">
+            <ThemeToggle />
+            <Link
+              href={routes.listYourBusiness}
+              className="rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-teal-400"
+            >
+              List Your Business
+            </Link>
+          </div>
+
         </div>
       </div>
 
