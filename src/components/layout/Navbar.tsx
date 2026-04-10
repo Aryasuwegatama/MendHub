@@ -71,24 +71,43 @@ export default function Navbar() {
 
           {/* Mobile: icon-only theme toggle + hamburger */}
           <div className="flex items-center gap-1 md:hidden">
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="inline-flex items-center justify-center rounded-full p-2 text-slate-600 transition hover:bg-white/50 dark:text-slate-300 dark:hover:bg-slate-800"
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? (
-                /* Sun icon — shown in dark mode to switch to light */
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+            {/* Icon-only theme pill: sun | moon */}
+            <div className="inline-flex items-center gap-0.5 rounded-full border border-white/20 bg-white/20 p-1 dark:border-white/10 dark:bg-slate-800/60">
+              {/* Sun — light mode button */}
+              <button
+                onClick={() => setTheme("light")}
+                className={cn(
+                  "inline-flex items-center justify-center rounded-full p-1.5 transition",
+                  theme === "light"
+                    ? "bg-teal-500 text-slate-950 shadow-sm"
+                    : "text-slate-600 hover:bg-white/50 dark:text-slate-400 dark:hover:bg-white/10"
+                )}
+                aria-label="Light mode"
+                aria-pressed={theme === "light"}
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
                   <circle cx="12" cy="12" r="4" />
                   <path d="M12 2.5v2.2M12 19.3v2.2M4.7 4.7l1.5 1.5M17.8 17.8l1.5 1.5M2.5 12h2.2M19.3 12h2.2M4.7 19.3l1.5-1.5M17.8 6.2l1.5-1.5" strokeLinecap="round" />
                 </svg>
-              ) : (
-                /* Moon icon — shown in light mode to switch to dark */
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+              </button>
+              {/* Moon — dark mode button */}
+              <button
+                onClick={() => setTheme("dark")}
+                className={cn(
+                  "inline-flex items-center justify-center rounded-full p-1.5 transition",
+                  theme === "dark"
+                    ? "bg-teal-500 text-slate-950 shadow-sm"
+                    : "text-slate-600 hover:bg-white/50 dark:text-slate-400 dark:hover:bg-white/10"
+                )}
+                aria-label="Dark mode"
+                aria-pressed={theme === "dark"}
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
                   <path d="M21 12.8A8.9 8.9 0 1 1 11.2 3a7.1 7.1 0 0 0 9.8 9.8Z" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-              )}
-            </button>
+              </button>
+            </div>
+
 
             <button
               onClick={() => setIsOpen(!isOpen)}
