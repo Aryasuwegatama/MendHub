@@ -21,18 +21,27 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 border-b border-white/40 bg-white/40 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/45">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/MendHub_Logo_transparent_background.png"
-              alt="MendHub Logo"
-              width={120}
-              height={40}
-              className="h-8 w-auto"
-              priority
-            />
-          </Link>
+        <div className="relative flex h-16 items-center justify-between">
+          <div className="flex items-center">
+            {/* Mobile Theme Toggle (Left side) */}
+            <div className="md:hidden">
+              <ThemeToggle compact />
+            </div>
+
+            {/* Logo (Centered on mobile, left on desktop) */}
+            <Link 
+              href="/" 
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 md:static md:translate-x-0 md:translate-y-0"
+            >
+              <Image
+                src="/MendHub_Logo_transparent_background.png"
+                alt="MendHub Logo"
+                width={120}
+                height={40}
+                className="h-8 w-auto"
+                priority
+              />
+            </Link>
 
           {/* Desktop Nav */}
           <div className="hidden md:block">
@@ -48,8 +57,9 @@ export default function Navbar() {
               ))}
             </div>
           </div>
+        </div>
 
-          {/* CTA & Mobile Menu Button */}
+        {/* CTA & Mobile Menu Button */}
           <div className="flex items-center gap-4">
             <div className="hidden md:flex">
               <ThemeToggle />
@@ -84,10 +94,6 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <div className={cn("md:hidden", isOpen ? "block" : "hidden")}>
         <div className="space-y-1 border-t border-white/30 bg-white/55 px-2 pb-3 pt-2 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/70 sm:px-3">
-          <div className="px-3 py-2">
-            <ThemeToggle compact />
-          </div>
-
           {navLinks.map((link) => (
             <Link
               key={link.label}
