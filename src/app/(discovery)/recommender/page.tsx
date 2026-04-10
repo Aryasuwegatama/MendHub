@@ -19,15 +19,15 @@ type ItemType = "phone" | "laptop" | "appliance" | "clothing" | "bicycle";
 type ProblemOption = {
   value: string;
   label: string;
-  /** Exact service name in the DB to filter by. null = show all providers in the category. */
-  serviceFilter: string | null;
+  /** Service name(s) in the DB to filter by. null = show all providers in the category. */
+  serviceFilter: string[] | null;
 };
 
 type RecommenderAnswers = {
   item: ItemType | "";
   problem: string;
-  /** Resolved service name to pass to the server action. null = no service filter. */
-  serviceFilter: string | null;
+  /** Resolved service names to pass to the server action. null = no service filter. */
+  serviceFilter: string[] | null;
   suburb: string;
 };
 
@@ -48,38 +48,40 @@ const ITEM_OPTIONS: { value: ItemType; label: string }[] = [
  */
 const ITEM_PROBLEM_OPTIONS: Record<ItemType, ProblemOption[]> = {
   phone: [
-    { value: "screen", label: "Screen is cracked or broken", serviceFilter: "Screen Replacement" },
-    { value: "battery", label: "Battery or charging issue", serviceFilter: "Battery Replacement" },
-    { value: "charging-port", label: "Charging port not working", serviceFilter: "Charging Port Fix" },
-    { value: "water", label: "Water damage", serviceFilter: "Water Damage Repair" },
-    { value: "data", label: "Need data recovered", serviceFilter: "Data Recovery" },
+    // Both "Screen Replacement" (FixIt Phone Lab) and "On-Site Screen Repair" (Mobile Medics)
+    // represent the same user problem — include both so neither provider is excluded.
+    { value: "screen", label: "Screen is cracked or broken", serviceFilter: ["Screen Replacement", "On-Site Screen Repair"] },
+    { value: "battery", label: "Battery or charging issue", serviceFilter: ["Battery Replacement"] },
+    { value: "charging-port", label: "Charging port not working", serviceFilter: ["Charging Port Fix"] },
+    { value: "water", label: "Water damage", serviceFilter: ["Water Damage Repair"] },
+    { value: "data", label: "Need data recovered", serviceFilter: ["Data Recovery"] },
     { value: "other", label: "Other / Not sure", serviceFilter: null },
   ],
   laptop: [
-    { value: "screen", label: "Screen is cracked or broken", serviceFilter: "Laptop Screen Replacement" },
-    { value: "slow", label: "Running slow / needs upgrade", serviceFilter: "RAM/SSD Upgrade" },
-    { value: "diagnostic", label: "Won't turn on / needs full diagnostic", serviceFilter: "Full Diagnostic" },
-    { value: "data", label: "Need data recovered", serviceFilter: "Data Recovery" },
+    { value: "screen", label: "Screen is cracked or broken", serviceFilter: ["Laptop Screen Replacement"] },
+    { value: "slow", label: "Running slow / needs upgrade", serviceFilter: ["RAM/SSD Upgrade"] },
+    { value: "diagnostic", label: "Won't turn on / needs full diagnostic", serviceFilter: ["Full Diagnostic"] },
+    { value: "data", label: "Need data recovered", serviceFilter: ["Data Recovery"] },
     { value: "other", label: "Other / Not sure", serviceFilter: null },
   ],
   appliance: [
-    { value: "fridge", label: "Fridge issue", serviceFilter: "Fridge Repair" },
-    { value: "oven", label: "Oven or stove issue", serviceFilter: "Oven/Stove Repair" },
-    { value: "washing", label: "Washing machine issue", serviceFilter: "Washing Machine Repair" },
+    { value: "fridge", label: "Fridge issue", serviceFilter: ["Fridge Repair"] },
+    { value: "oven", label: "Oven or stove issue", serviceFilter: ["Oven/Stove Repair"] },
+    { value: "washing", label: "Washing machine issue", serviceFilter: ["Washing Machine Repair"] },
     { value: "other", label: "Other appliance", serviceFilter: null },
   ],
   clothing: [
-    { value: "hemming", label: "Hemming or shortening", serviceFilter: "Hemming" },
-    { value: "zip", label: "Broken zip", serviceFilter: "Zip Replacement" },
-    { value: "fitting", label: "Custom fitting or tailoring", serviceFilter: "Custom Fitting" },
+    { value: "hemming", label: "Hemming or shortening", serviceFilter: ["Hemming"] },
+    { value: "zip", label: "Broken zip", serviceFilter: ["Zip Replacement"] },
+    { value: "fitting", label: "Custom fitting or tailoring", serviceFilter: ["Custom Fitting"] },
     { value: "other", label: "Other alteration", serviceFilter: null },
   ],
   bicycle: [
-    { value: "tune", label: "Needs a tune-up", serviceFilter: "Basic Tune-Up" },
-    { value: "brakes", label: "Brake issue", serviceFilter: "Brake Adjustment" },
-    { value: "full-service", label: "Full service", serviceFilter: "Full Service" },
-    { value: "tyre", label: "Flat tyre or tyre replacement", serviceFilter: "Tyre Replacement" },
-    { value: "wheel", label: "Wheel or rim issue", serviceFilter: "Wheel Truing" },
+    { value: "tune", label: "Needs a tune-up", serviceFilter: ["Basic Tune-Up"] },
+    { value: "brakes", label: "Brake issue", serviceFilter: ["Brake Adjustment"] },
+    { value: "full-service", label: "Full service", serviceFilter: ["Full Service"] },
+    { value: "tyre", label: "Flat tyre or tyre replacement", serviceFilter: ["Tyre Replacement"] },
+    { value: "wheel", label: "Wheel or rim issue", serviceFilter: ["Wheel Truing"] },
     { value: "other", label: "Other / Not sure", serviceFilter: null },
   ],
 };
@@ -245,7 +247,7 @@ export default function RecommenderPage() {
                 label="What's the issue?"
                 value={answers.problem}
                 onChange={(event) => {
-                  // Resolve the serviceFilter from the selected problem option
+                  // Resolve the serviceFilter array from the selected problem option
                   const selectedOption = ITEM_PROBLEM_OPTIONS[answers.item as ItemType].find(
                     (opt) => opt.value === event.target.value
                   );
@@ -326,8 +328,8 @@ export default function RecommenderPage() {
               <div className="mb-6">
                 <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{recommendation}</h3>
 
-                {/* Show the specific issue label when a service filter was active */}
-                {problemLabel && answers.serviceFilter && (
+                {/* Show the specific issue label when a service filter is active */}
+                {problemLabel && answers.serviceFilter && answers.serviceFilter.length > 0 && (
                   <p className="mt-1 text-sm font-semibold text-teal-600 dark:text-teal-400">
                     Filtered for: {problemLabel}
                   </p>

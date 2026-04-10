@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { providers, providerCategories, categories, services } from "@/db/schema";
-import { eq, and, ilike, exists } from "drizzle-orm";
+import { eq, and, ilike, exists, inArray } from "drizzle-orm";
 
 /**
  * Fetches all active providers matching the given category and suburb.
@@ -12,7 +12,7 @@ import { eq, and, ilike, exists } from "drizzle-orm";
 export async function getRecommendedProviders(
   categoryName: string,
   suburbParam: string,
-  serviceFilter: string | null = null
+  serviceFilter: string[] | null = null  // array of service names to match (any), or null for no filter
 ) {
   const conditions = [eq(providers.status, "active")];
 
@@ -36,8 +36,10 @@ export async function getRecommendedProviders(
     )
   );
 
-  // If a specific service was selected, further narrow to providers offering that service
-  if (serviceFilter) {
+  // If specific services were selected, narrow to providers offering ANY of those service names.
+  // Using an array + inArray allows multiple semantically equivalent service names to match
+  // (e.g. "Screen Replacement" and "On-Site Screen Repair" are both valid for a cracked screen).
+  if (serviceFilter && serviceFilter.length > 0) {
     conditions.push(
       exists(
         db
@@ -47,7 +49,7 @@ export async function getRecommendedProviders(
             and(
               eq(services.providerId, providers.id),
               eq(services.isActive, true),
-              eq(services.name, serviceFilter) // exact match — value comes from our controlled mapping
+              inArray(services.name, serviceFilter) // matches any of the provided service names
             )
           )
       )
@@ -68,9 +70,10 @@ export async function getRecommendedProviders(
         .innerJoin(categories, eq(providerCategories.categoryId, categories.id))
         .where(eq(providerCategories.providerId, p.id));
 
-      // When a specific service is filtered, prefer that service's price for accuracy
+      // When specific services are filtered, prefer the matched service's price.
+      // Use the first service from serviceFilter that this provider actually has.
       let specificServiceRows: { startingPrice: string | null }[] = [];
-      if (serviceFilter) {
+      if (serviceFilter && serviceFilter.length > 0) {
         specificServiceRows = await db
           .select({ startingPrice: services.startingPrice })
           .from(services)
@@ -78,7 +81,7 @@ export async function getRecommendedProviders(
             and(
               eq(services.providerId, p.id),
               eq(services.isActive, true),
-              eq(services.name, serviceFilter)
+              inArray(services.name, serviceFilter)
             )
           )
           .limit(1);
