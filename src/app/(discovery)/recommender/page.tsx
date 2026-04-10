@@ -10,6 +10,7 @@ import PageShell from "@/components/ui/PageShell";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import PriceBadge from "@/components/ui/PriceBadge";
+import SuburbAutocomplete from "@/components/SuburbAutocomplete";
 import { getRecommendedProviders } from "./actions";
 
 type ItemType =
@@ -184,12 +185,12 @@ export default function RecommenderPage() {
               )}
 
               {step === 3 && (
-                <Input
+                <SuburbAutocomplete
                   label="What suburb or area is preferred?"
                   placeholder="e.g. Brisbane City"
                   value={answers.suburb}
-                  onChange={(event) => {
-                    setAnswers((current) => ({ ...current, suburb: event.target.value }));
+                  onChange={(val) => {
+                    setAnswers((current) => ({ ...current, suburb: val }));
                     setError("");
                   }}
                 />
