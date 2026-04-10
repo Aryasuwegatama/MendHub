@@ -19,10 +19,36 @@ export default async function BookingPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ serviceId?: string }>;
+  searchParams: Promise<{
+    serviceId?: string;
+    prefillName?: string;
+    prefillEmail?: string;
+    prefillPhone?: string;
+    prefillSuburb?: string;
+    prefillDate?: string;
+    prefillIssue?: string;
+  }>;
 }) {
   const { id } = await params;
-  const { serviceId } = await searchParams;
+  const {
+    serviceId,
+    prefillName,
+    prefillEmail,
+    prefillPhone,
+    prefillSuburb,
+    prefillDate,
+    prefillIssue,
+  } = await searchParams;
+
+  // Build prefill object only when coming back from the payment summary page
+  const prefill = prefillName ? {
+    name: prefillName,
+    email: prefillEmail ?? "",
+    phone: prefillPhone ?? "",
+    suburb: prefillSuburb ?? "",
+    preferredDate: prefillDate ?? "",
+    issueSummary: prefillIssue ?? "",
+  } : undefined;
 
   const [provider] = await db
     .select()
@@ -67,7 +93,7 @@ export default async function BookingPage({
       )}
 
       <div className="mt-10">
-        <BookingForm providerId={id} serviceId={serviceId} />
+        <BookingForm providerId={id} serviceId={serviceId} prefill={prefill} />
       </div>
     </PageShell>
   );

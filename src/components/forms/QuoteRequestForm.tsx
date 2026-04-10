@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { quoteSchema, type QuoteFormValues } from "@/lib/validations/quote";
@@ -9,7 +8,6 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import SectionLabel from "@/components/ui/SectionLabel";
 import Input from "@/components/ui/Input";
-import { routes } from "@/config/routes";
 
 interface QuoteRequestFormProps {
   providerId: string;
@@ -17,7 +15,6 @@ interface QuoteRequestFormProps {
 }
 
 export default function QuoteRequestForm({ providerId, serviceId }: QuoteRequestFormProps) {
-  const router = useRouter();
   const [submitMessage, setSubmitMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -69,8 +66,10 @@ export default function QuoteRequestForm({ providerId, serviceId }: QuoteRequest
       }
 
       reset();
-      // Quote flow: no deposit required — amount is 0; confirmation page shows the quote record
-      router.push(routes.paymentForQuote(json.id, "0"));
+      setSubmitMessage({
+        type: "success",
+        text: "Your quote request has been submitted. The provider will review it and get back to you within 24 hours.",
+      });
     } catch (error) {
       setSubmitMessage({
         type: "error",
@@ -78,6 +77,48 @@ export default function QuoteRequestForm({ providerId, serviceId }: QuoteRequest
       });
     }
   };
+
+  // On success, replace the entire form with a confirmation section
+  if (submitMessage?.type === "success") {
+    return (
+      <Card variant="default" className="mx-auto max-w-3xl">
+        <div className="flex flex-col items-center py-8 text-center">
+          {/* Checkmark icon */}
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-teal-500/20">
+            <svg
+              className="h-8 w-8 text-teal-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+          </div>
+
+          <h2 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white">
+            Quote Request Submitted
+          </h2>
+          <p className="mt-3 max-w-sm text-slate-600 dark:text-slate-300">
+            {submitMessage.text}
+          </p>
+
+          <div className="mt-8 h-px w-full bg-slate-200/60 dark:bg-white/10" />
+
+          <p className="mt-6 text-sm text-slate-500 dark:text-slate-400">
+            Need to submit another request?
+          </p>
+          <button
+            type="button"
+            onClick={() => setSubmitMessage(null)}
+            className="mt-3 inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-950/40 dark:text-slate-200 dark:hover:border-teal-300 dark:hover:text-teal-200"
+          >
+            Submit another request
+          </button>
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card variant="default" className="mx-auto max-w-3xl">
@@ -140,16 +181,12 @@ export default function QuoteRequestForm({ providerId, serviceId }: QuoteRequest
           )}
         </div>
 
-        {submitMessage ? (
-          <div
-            className={submitMessage.type === "success"
-              ? "rounded-2xl border border-teal-200 bg-teal-50/80 px-4 py-3 text-sm font-medium text-teal-800 dark:border-teal-400/20 dark:bg-teal-400/10 dark:text-teal-200"
-              : "rounded-2xl border border-red-200 bg-red-50/80 px-4 py-3 text-sm font-medium text-red-700 dark:border-red-400/20 dark:bg-red-400/10 dark:text-red-200"
-            }
-          >
+        {/* Error banner — only shown for error states, success replaces the whole form above */}
+        {submitMessage?.type === "error" && (
+          <div className="rounded-2xl border border-red-200 bg-red-50/80 px-4 py-3 text-sm font-medium text-red-700 dark:border-red-400/20 dark:bg-red-400/10 dark:text-red-200">
             {submitMessage.text}
           </div>
-        ) : null}
+        )}
 
         <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={isSubmitting}>
           {isSubmitting ? (
