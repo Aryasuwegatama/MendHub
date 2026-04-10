@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
       issueDescription,
       deviceDetails,
       preferredDate,
+      serviceId,
     } = body;
 
     // Basic validation
@@ -42,6 +43,7 @@ export async function POST(request: NextRequest) {
       .insert(quoteRequests)
       .values({
         providerId,
+        serviceId: serviceId || null,
         customerName,
         customerEmail,
         customerPhone,
