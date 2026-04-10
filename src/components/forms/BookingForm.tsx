@@ -14,9 +14,21 @@ import Input from "@/components/ui/Input";
 interface BookingFormProps {
   providerId: string;
   serviceId?: string;
+  /** Pre-populates the form when the user returns from the payment summary page. */
+  prefill?: {
+    name: string;
+    email: string;
+    phone: string;
+    suburb: string;
+    preferredDate: string;
+    issueSummary: string;
+  };
 }
 
-export default function BookingForm({ providerId, serviceId }: BookingFormProps) {
+/** Today's date in YYYY-MM-DD format — used as the default for the date picker. */
+const todayISO = new Date().toLocaleDateString("en-CA");
+
+export default function BookingForm({ providerId, serviceId, prefill }: BookingFormProps) {
   const router = useRouter();
   const [submitMessage, setSubmitMessage] = useState<{
     type: "success" | "error";
@@ -31,12 +43,12 @@ export default function BookingForm({ providerId, serviceId }: BookingFormProps)
   } = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      suburb: "",
-      preferredDate: "",
-      issueSummary: "",
+      name: prefill?.name ?? "",
+      email: prefill?.email ?? "",
+      phone: prefill?.phone ?? "",
+      suburb: prefill?.suburb ?? "",
+      preferredDate: prefill?.preferredDate || todayISO,
+      issueSummary: prefill?.issueSummary ?? "",
     },
   });
 

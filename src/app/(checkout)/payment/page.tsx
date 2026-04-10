@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
-import { bookings, quoteRequests, providers } from "@/db/schema";
+import { bookings, quoteRequests, providers, services } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { routes } from "@/config/routes";
 import Badge from "@/components/ui/Badge";
@@ -43,8 +44,14 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
     const [booking] = await db
       .select({
         id: bookings.id,
+        providerId: bookings.providerId,
+        serviceId: bookings.serviceId,
+        serviceName: services.name,
+        servicePrice: services.startingPrice,
+        servicePriceMethod: services.priceMethod,
         customerName: bookings.customerName,
         customerEmail: bookings.customerEmail,
+        customerPhone: bookings.customerPhone,
         serviceAddress: bookings.serviceAddress,
         bookingDate: bookings.bookingDate,
         issueDescription: bookings.issueDescription,
@@ -53,6 +60,8 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
       })
       .from(bookings)
       .innerJoin(providers, eq(bookings.providerId, providers.id))
+      // Left join — serviceId is optional on a booking
+      .leftJoin(services, eq(bookings.serviceId, services.id))
       .where(eq(bookings.id, bookingId))
       .limit(1);
 
@@ -60,10 +69,28 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
       redirect(routes.providers.index);
     }
 
-    const depositNum = parseFloat(amount);
+    // ── Pricing ───────────────────────────────────────────────────────────────
+    // Use the real service price from DB when available (fixed-price services).
+    // Fall back to the URL `amount` param for quote-based or unpriced services.
+    const hasRealPrice =
+      booking.servicePriceMethod === "fixed" &&
+      booking.servicePrice !== null &&
+      booking.servicePrice !== undefined;
+
+    const serviceTotal = hasRealPrice ? parseFloat(booking.servicePrice!) : null;
+    const fallbackAmount = parseFloat(amount); // URL param, default "65"
+
+    // Deposit is 30% of total for fixed-price services, otherwise use URL param
+    const depositNum = serviceTotal !== null
+      ? Math.round(serviceTotal * 0.3 * 100) / 100
+      : fallbackAmount;
+
+    const totalNum = serviceTotal ?? fallbackAmount * 3;
+    const balanceNum = Math.round((totalNum - depositNum) * 100) / 100;
+
     const depositLabel = `$${depositNum.toFixed(2)}`;
-    const estimatedTotal = depositNum * 3; // demo heuristic: deposit is ~33% of total
-    const balanceLabel = `$${(estimatedTotal - depositNum).toFixed(2)}`;
+    const balanceLabel = `$${balanceNum.toFixed(2)}`;
+    const totalLabel = `$${totalNum.toFixed(2)}`;
 
     const formattedDate = new Date(booking.bookingDate).toLocaleDateString("en-AU", {
       weekday: "long",
@@ -100,6 +127,41 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
               </span>
             </div>
 
+            {/* Selected service chip */}
+            {booking.serviceName && (
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-1.5 text-sm font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                <svg className="h-4 w-4 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {booking.serviceName}
+              </div>
+            )}
+
+            {/* Back button — lets user correct booking details before paying */}
+            <div className="mt-4">
+              <Link
+                href={(() => {
+                  // Build all query params in one object to avoid double-? URLs
+                  const params = new URLSearchParams({
+                    prefillName: booking.customerName,
+                    prefillEmail: booking.customerEmail,
+                    prefillPhone: booking.customerPhone ?? "",
+                    prefillSuburb: booking.serviceAddress ?? "",
+                    prefillDate: new Date(booking.bookingDate).toLocaleDateString("en-CA"),
+                    prefillIssue: booking.issueDescription ?? "",
+                  });
+                  if (booking.serviceId) params.set("serviceId", booking.serviceId);
+                  return `/providers/${booking.providerId}/book?${params.toString()}`;
+                })()}
+                className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-teal-600 dark:text-slate-400 dark:hover:text-teal-300"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                </svg>
+                Go back and edit booking details
+              </Link>
+            </div>
+
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <InfoBlock label="Customer">{booking.customerName}</InfoBlock>
               <InfoBlock label="Visit date">{formattedDate}</InfoBlock>
@@ -118,32 +180,32 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
               </p>
             </div>
 
-            <div className="mt-6 space-y-3 rounded-[1.5rem] bg-slate-950/90 p-6 text-white dark:bg-slate-950">
-              <div className="flex items-center justify-between gap-4 text-sm sm:text-base">
-                <span className="text-slate-300">Booking deposit</span>
-                <span className="font-semibold text-white">{depositLabel}</span>
-              </div>
-              <div className="flex items-center justify-between gap-4 text-sm sm:text-base">
-                <span className="text-slate-300">Remaining balance due on completion</span>
-                <span className="font-semibold text-white">{balanceLabel}</span>
-              </div>
-              <div className="border-t border-white/10 pt-4">
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-sm font-semibold uppercase tracking-[0.15em] text-teal-200">
-                    Estimated total
-                  </span>
-                  <span className="text-xl font-bold text-white">
-                    ${estimatedTotal.toFixed(2)}
-                  </span>
+              <div className="mt-6 space-y-3 rounded-[1.5rem] bg-slate-950/90 p-6 text-white dark:bg-slate-950">
+                <div className="flex items-center justify-between gap-4 text-sm sm:text-base">
+                  <span className="text-slate-300">Booking deposit (30%)</span>
+                  <span className="font-semibold text-white">{depositLabel}</span>
+                </div>
+                <div className="flex items-center justify-between gap-4 text-sm sm:text-base">
+                  <span className="text-slate-300">Remaining balance due on completion</span>
+                  <span className="font-semibold text-white">{balanceLabel}</span>
+                </div>
+                <div className="border-t border-white/10 pt-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-sm font-semibold uppercase tracking-[0.15em] text-teal-200">
+                      {hasRealPrice ? "Service total" : "Estimated total"}
+                    </span>
+                    <span className="text-xl font-bold text-white">
+                      {totalLabel}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
           </Card>
 
           {/* Interactive payment selector — Client Component */}
           <PaymentMethodSelector
             bookingId={bookingId}
-            amount={amount}
+            amount={depositNum.toString()}
             depositLabel={depositLabel}
             balanceLabel={balanceLabel}
           />

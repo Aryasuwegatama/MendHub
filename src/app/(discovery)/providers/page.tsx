@@ -10,6 +10,7 @@ import PageShell from "@/components/ui/PageShell";
 import PriceBadge from "@/components/ui/PriceBadge";
 import SectionLabel from "@/components/ui/SectionLabel";
 import SuburbFilterInput from "@/components/SuburbFilterInput";
+import { BRISBANE_SUBURBS } from "@/lib/brisbane-suburbs";
 
 import ServiceSearchInput from "@/components/providers/ServiceSearchInput";
 
@@ -87,7 +88,7 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
   }
 
   // ── Data fetching ────────────────────────────────────────────────────────
-  const [rawProviders, dbCategories] = await Promise.all([
+  const [rawProviders, dbCategories, rawServices] = await Promise.all([
     db
       .select()
       .from(providers)
@@ -98,7 +99,23 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
       .from(categories)
       .where(eq(categories.isActive, true))
       .orderBy(categories.name),
+    db
+      .selectDistinct({ name: services.name, category: categories.name })
+      .from(services)
+      .innerJoin(providerCategories, eq(providerCategories.providerId, services.providerId))
+      .innerJoin(categories, eq(categories.id, providerCategories.categoryId))
+      .where(eq(services.isActive, true)),
   ]);
+
+  const availableSuburbs = BRISBANE_SUBURBS;
+  
+  // Sort category alphabetically, then service name alphabetically
+  const availableServices = rawServices
+    .filter((s) => s.name && s.category)
+    .sort((a, b) => {
+      if (a.category === b.category) return a.name.localeCompare(b.name);
+      return a.category.localeCompare(b.category);
+    });
 
   // Augment each provider with category names, starting price, AND matching services
   const augmentedProviders = await Promise.all(
@@ -160,7 +177,7 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
               <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                 Filter by suburb
               </label>
-              <SuburbFilterInput defaultValue={suburbParam} />
+              <SuburbFilterInput defaultValue={suburbParam} availableSuburbs={availableSuburbs} />
             </div>
 
             {/* Service keyword search — Client Component */}
@@ -168,7 +185,7 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
               <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                 Search specific services
               </label>
-              <ServiceSearchInput defaultValue={queryParam} />
+              <ServiceSearchInput defaultValue={queryParam} availableServices={availableServices} />
             </div>
           </div>
 

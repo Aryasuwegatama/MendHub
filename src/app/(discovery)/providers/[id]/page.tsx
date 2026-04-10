@@ -6,7 +6,6 @@ import { providers, services, providerCategories, categories } from "@/db/schema
 import { eq, and } from "drizzle-orm";
 import { routes } from "@/config/routes";
 import Card from "@/components/ui/Card";
-import InfoBlock from "@/components/ui/InfoBlock";
 import PageIntro from "@/components/ui/PageIntro";
 import PageShell from "@/components/ui/PageShell";
 import PriceBadge from "@/components/ui/PriceBadge";
@@ -67,18 +66,29 @@ export default async function ProviderDetailPage({
         title={provider.businessName}
         description={provider.description}
       >
-        <div className="flex flex-wrap gap-3">
-          <span className="glass-pill inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
-            {provider.categories?.[0]?.name ?? "Repair Service"}
-          </span>
-          {provider.isFeatured ? (
-            <span className="inline-flex items-center rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-slate-950">
-              Featured Professional
-            </span>
-          ) : (
+        <div className="flex flex-col gap-3 mt-2">
+          <div className="flex flex-wrap gap-3">
             <span className="glass-pill inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
-              Verified Provider
+              {provider.categories?.[0]?.name ?? "Repair Service"}
             </span>
+            {provider.isFeatured ? (
+              <span className="inline-flex items-center rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-slate-950">
+                Featured Professional
+              </span>
+            ) : (
+              <span className="glass-pill inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                Verified Provider
+              </span>
+            )}
+          </div>
+          {provider.suburb && (
+            <div className="flex">
+              <span className="glass-pill inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                {provider.suburb}
+                {provider.serviceArea && provider.serviceArea !== provider.suburb && ` (${provider.serviceArea})`}
+              </span>
+            </div>
           )}
         </div>
       </PageIntro>
@@ -133,17 +143,6 @@ export default async function ProviderDetailPage({
                 </div>
               </div>
             ))}
-          </div>
-        </Card>
-
-        {/* Business overview — secondary information */}
-        <Card variant="default">
-          <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Business overview</h2>
-          <p className="mt-4 text-slate-600 dark:text-slate-300">{provider.description}</p>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <InfoBlock label="Suburb">{provider.suburb}</InfoBlock>
-            <InfoBlock label="Service Area">{provider.serviceArea}</InfoBlock>
           </div>
         </Card>
       </div>
