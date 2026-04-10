@@ -2,57 +2,44 @@ import Link from "next/link";
 import { routes } from "@/config/routes";
 import SectionLabel from "@/components/ui/SectionLabel";
 import PriceBadge from "@/components/ui/PriceBadge";
+import { db } from "@/db";
+import { providers, providerCategories, categories, services } from "@/db/schema";
+import { eq, and } from "drizzle-orm";
 
-type FeaturedProvider = {
-  id: string;
-  name: string;
-  category: string;
-  suburb: string;
-  description: string;
-  price: string;
-  verified: boolean;
-};
+export default async function FeaturedProviders() {
+  const featuredProviders = await db
+    .select()
+    .from(providers)
+    .where(and(eq(providers.isFeatured, true), eq(providers.status, "active")))
+    .limit(4);
 
-const featuredProviders: FeaturedProvider[] = [
-  {
-    id: "fixit-phone-lab",
-    name: "QuickFix Mobiles",
-    category: "Phone Repair",
-    suburb: "Brisbane City",
-    description: "Fast and reliable phone repairs with same-day screen and battery replacements.",
-    price: "$49+",
-    verified: true,
-  },
-  {
-    id: "brisbane-laptop-pros",
-    name: "Laptop Rescue Co.",
-    category: "Laptop Repair",
-    suburb: "West End",
-    description: "Diagnostics, screen replacement, and performance tune-ups for study and work devices.",
-    price: "$79+",
-    verified: true,
-  },
-  {
-    id: "home-appliance-heroes",
-    name: "Appliance First",
-    category: "Appliance Repair",
-    suburb: "Woolloongabba",
-    description: "Practical household appliance fixes for washers, fridges, ovens, and dryers.",
-    price: "Quote required",
-    verified: true,
-  },
-  {
-    id: "quickstitch-alterations",
-    name: "Quick Stitch Studio",
-    category: "Clothing Alteration",
-    suburb: "Chermside",
-    description: "Everyday tailoring, zip replacement, hemming, and urgent alteration jobs.",
-    price: "$25+",
-    verified: false,
-  },
-];
+  const providerData = await Promise.all(
+    featuredProviders.map(async (p) => {
+      const [cat] = await db
+        .select({ name: categories.name })
+        .from(providerCategories)
+        .innerJoin(categories, eq(providerCategories.categoryId, categories.id))
+        .where(eq(providerCategories.providerId, p.id))
+        .limit(1);
 
-export default function FeaturedProviders() {
+      const [svc] = await db
+        .select({ startingPrice: services.startingPrice, priceMethod: services.priceMethod })
+        .from(services)
+        .where(and(eq(services.providerId, p.id), eq(services.isActive, true)))
+        .orderBy(services.startingPrice)
+        .limit(1);
+
+      const price = svc?.startingPrice
+        ? `From $${Number(svc.startingPrice).toFixed(0)}`
+        : "Quote required";
+
+      return {
+        ...p,
+        category: cat?.name ?? "Repair Service",
+        price,
+      };
+    })
+  );
   return (
     <section id="providers" className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
@@ -68,7 +55,7 @@ export default function FeaturedProviders() {
 
         <div className="-mx-4 overflow-x-auto px-4 pb-2 lg:mx-0 lg:px-0">
           <div className="flex snap-x gap-4 lg:grid lg:grid-cols-3 xl:grid-cols-4 lg:gap-6">
-            {featuredProviders.map((provider) => (
+            {providerData.map((provider) => (
               <article
                 key={provider.id}
                 className="glass-panel min-w-[285px] snap-start rounded-2xl p-6 shadow-lg shadow-slate-900/5 lg:min-w-0"
@@ -79,11 +66,11 @@ export default function FeaturedProviders() {
                       {provider.category}
                     </p>
                     <h3 className="mt-3 text-xl font-semibold text-slate-900 dark:text-white">
-                      {provider.name}
+                      {provider.businessName}
                     </h3>
                   </div>
                   <span className="glass-pill rounded-full px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200">
-                    {provider.verified ? "Verified" : "Trust Badge"}
+                    {provider.isFeatured ? "Featured" : "Listed"}
                   </span>
                 </div>
 

@@ -2,16 +2,12 @@ import type { Metadata } from "next";
 import QuoteRequestForm from "@/components/forms/QuoteRequestForm";
 import PageIntro from "@/components/ui/PageIntro";
 import PageShell from "@/components/ui/PageShell";
-import { getMockProviderParams } from "@/lib/mockData";
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Request a Quote",
   description: "Submit a quote request to this repair provider.",
 };
-
-export function generateStaticParams() {
-  return getMockProviderParams();
-}
 
 export default async function QuoteRequestPage({
   params,

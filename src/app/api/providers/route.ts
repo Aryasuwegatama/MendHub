@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { providers, providerCategories, categories } from "@/db/schema";
+import { providers, providerCategories, categories, services } from "@/db/schema";
 import { eq, and, ilike, exists } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
@@ -39,9 +39,33 @@ export async function GET(request: NextRequest) {
       .where(and(...conditions))
       .orderBy(providers.businessName);
 
+    // Augment each provider with categories and price
+    const augmented = await Promise.all(
+      data.map(async (p) => {
+        const cats = await db
+          .select({ name: categories.name, slug: categories.slug })
+          .from(providerCategories)
+          .innerJoin(categories, eq(providerCategories.categoryId, categories.id))
+          .where(eq(providerCategories.providerId, p.id));
+
+        const [cheapest] = await db
+          .select({ startingPrice: services.startingPrice, priceMethod: services.priceMethod })
+          .from(services)
+          .where(and(eq(services.providerId, p.id), eq(services.isActive, true)))
+          .orderBy(services.startingPrice)
+          .limit(1);
+
+        const price = cheapest?.startingPrice
+          ? `From $${Number(cheapest.startingPrice).toFixed(0)}`
+          : "Quote required";
+
+        return { ...p, categories: cats, price };
+      })
+    );
+
     return NextResponse.json({
       success: true,
-      data,
+      data: augmented,
     });
   } catch (error) {
     console.error("Error fetching providers:", error);
