@@ -70,7 +70,8 @@ export default function BookingForm({ providerId }: BookingFormProps) {
       }
 
       reset();
-      router.push(routes.payment);
+      // Pass the real booking ID and fixed demo deposit to the payment page
+      router.push(routes.payment(json.id, "65"));
     } catch (error) {
       setSubmitMessage({
         type: "error",

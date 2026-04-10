@@ -6,8 +6,32 @@ export const routes = {
   listYourBusiness: "/list-your-business",
   policies: "/policies",
   recommender: "/recommender",
-  payment: "/payment",
-  confirmation: "/confirmation",
+
+  /**
+   * Builds the simulated payment page URL for a booking.
+   * The amount is a fixed deposit figure (string, e.g. "65").
+   */
+  payment(bookingId: string, amount: string) {
+    const params = new URLSearchParams({ bookingId, amount });
+    return `/payment?${params.toString()}`;
+  },
+
+  /**
+   * Builds the simulated payment page URL for a quote request.
+   * Amount is "0" — quote flow requires no upfront deposit.
+   */
+  paymentForQuote(quoteRequestId: string, amount: string) {
+    const params = new URLSearchParams({ quoteRequestId, amount });
+    return `/payment?${params.toString()}`;
+  },
+
+  /**
+   * Builds the confirmation/receipt page URL from a transaction reference.
+   */
+  confirmation(ref: string) {
+    return `/confirmation?ref=${encodeURIComponent(ref)}`;
+  },
+
   providers: {
     index: "/providers",
     byCategory(category: string) {

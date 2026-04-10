@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { quoteSchema, type QuoteFormValues } from "@/lib/validations/quote";
@@ -8,12 +9,14 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import SectionLabel from "@/components/ui/SectionLabel";
 import Input from "@/components/ui/Input";
+import { routes } from "@/config/routes";
 
 interface QuoteRequestFormProps {
   providerId: string;
 }
 
 export default function QuoteRequestForm({ providerId }: QuoteRequestFormProps) {
+  const router = useRouter();
   const [submitMessage, setSubmitMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -63,11 +66,9 @@ export default function QuoteRequestForm({ providerId }: QuoteRequestFormProps) 
         throw new Error(json.error ?? "Submission failed. Please try again.");
       }
 
-      setSubmitMessage({
-        type: "success",
-        text: "Quote request submitted successfully.",
-      });
       reset();
+      // Quote flow: no deposit required — amount is 0; confirmation page shows the quote record
+      router.push(routes.paymentForQuote(json.id, "0"));
     } catch (error) {
       setSubmitMessage({
         type: "error",

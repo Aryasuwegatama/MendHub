@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Card from "@/components/ui/Card";
 import PageShell from "@/components/ui/PageShell";
-import { categories } from "@/lib/mockData";
+import { categoryConfig as categories } from "@/lib/categoryConfig";
 
 export const metadata: Metadata = {
   title: "Browse Categories",
@@ -25,8 +25,8 @@ export default function CategoriesPage() {
         </section>
 
         <section className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {categories.map((category) => (
-            <Link key={category.key} href={category.href} className="group block">
+            {categories.map((category) => (
+              <Link key={category.slug} href={category.href} className="group block">
               <Card hoverable variant="default" className="h-full overflow-hidden border-white/70">
                 <div className={`inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br ${category.accent} text-3xl shadow-lg shadow-slate-900/10`}>
                   {category.icon}
