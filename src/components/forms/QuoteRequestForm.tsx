@@ -13,9 +13,10 @@ import { routes } from "@/config/routes";
 
 interface QuoteRequestFormProps {
   providerId: string;
+  serviceId?: string;
 }
 
-export default function QuoteRequestForm({ providerId }: QuoteRequestFormProps) {
+export default function QuoteRequestForm({ providerId, serviceId }: QuoteRequestFormProps) {
   const router = useRouter();
   const [submitMessage, setSubmitMessage] = useState<{
     type: "success" | "error";
@@ -53,6 +54,7 @@ export default function QuoteRequestForm({ providerId }: QuoteRequestFormProps) 
         },
         body: JSON.stringify({
           providerId,
+          serviceId,
           customerName: data.name,
           customerEmail: data.email,
           customerPhone: data.phone,

@@ -13,9 +13,10 @@ import Input from "@/components/ui/Input";
 
 interface BookingFormProps {
   providerId: string;
+  serviceId?: string;
 }
 
-export default function BookingForm({ providerId }: BookingFormProps) {
+export default function BookingForm({ providerId, serviceId }: BookingFormProps) {
   const router = useRouter();
   const [submitMessage, setSubmitMessage] = useState<{
     type: "success" | "error";
@@ -54,6 +55,7 @@ export default function BookingForm({ providerId }: BookingFormProps) {
         },
         body: JSON.stringify({
           providerId,
+          serviceId,
           customerName: data.name,
           customerEmail: data.email,
           customerPhone: data.phone,

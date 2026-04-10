@@ -120,18 +120,38 @@ export default async function ProviderDetailPage({
             <div className="mt-6 space-y-4">
               {provider.services.map((service) => (
                 <div key={service.id} className="glass-panel-muted rounded-2xl p-5">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
                         {service.name}
                       </h3>
-                      <p className="mt-2 text-slate-600 dark:text-slate-300">{service.description}</p>
+                      <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{service.description}</p>
+                      <div className="mt-3">
+                        <PriceBadge>
+                          {service.startingPrice
+                            ? `From $${Number(service.startingPrice).toFixed(0)}`
+                            : "Quote"}
+                        </PriceBadge>
+                      </div>
                     </div>
-                    <PriceBadge>
-                      {service.startingPrice
-                        ? `From $${Number(service.startingPrice).toFixed(0)}`
-                        : "Quote"}
-                    </PriceBadge>
+                    
+                    <div className="flex shrink-0 flex-col gap-2 min-w-[140px]">
+                      {service.priceMethod === 'fixed' ? (
+                        <Link
+                          href={routes.providers.book(id, service.id)}
+                          className="inline-flex items-center justify-center rounded-full bg-teal-500 px-4 py-2.5 text-xs font-bold text-slate-950 transition hover:bg-teal-400"
+                        >
+                          Book Now
+                        </Link>
+                      ) : (
+                        <Link
+                          href={routes.providers.quote(id, service.id)}
+                          className="inline-flex items-center justify-center rounded-full bg-teal-500 px-4 py-2.5 text-xs font-bold text-slate-950 transition hover:bg-teal-400"
+                        >
+                          Get Quote
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -153,13 +173,16 @@ export default async function ProviderDetailPage({
           </Card>
 
           <Card variant="default">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Take the next step</h2>
+            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">General inquiry</h2>
+            <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
+              Not sure which service you need? Send a general quote request or booking inquiry to {provider.businessName}.
+            </p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
               <LinkButton href={routes.providers.quote(id)} size="sm">
-                Request Quote
+                General Quote
               </LinkButton>
               <LinkButton href={routes.providers.book(id)} variant="ghost" size="sm">
-                Book Service
+                General Booking
               </LinkButton>
             </div>
           </Card>

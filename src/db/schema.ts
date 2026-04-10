@@ -79,6 +79,7 @@ export const bookings = pgTable('bookings', {
 export const quoteRequests = pgTable('quote_requests', {
   id: uuid('id').defaultRandom().primaryKey(),
   providerId: uuid('provider_id').references(() => providers.id).notNull(),
+  serviceId: uuid('service_id').references(() => services.id),
   customerName: varchar('customer_name', { length: 255 }).notNull(),
   customerEmail: varchar('customer_email', { length: 255 }).notNull(),
   customerPhone: varchar('customer_phone', { length: 50 }).notNull(),

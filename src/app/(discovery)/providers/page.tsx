@@ -11,6 +11,8 @@ import PriceBadge from "@/components/ui/PriceBadge";
 import SectionLabel from "@/components/ui/SectionLabel";
 import SuburbFilterInput from "@/components/SuburbFilterInput";
 
+import ServiceSearchInput from "@/components/providers/ServiceSearchInput";
+
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -22,12 +24,13 @@ type ProvidersPageProps = {
   searchParams: Promise<{
     category?: string | string[];
     suburb?: string;
+    q?: string;
   }>;
 };
 
 /**
  * Server Component — queries Neon DB directly via Drizzle (no HTTP round-trip).
- * Supports filtering by category slug and suburb (partial, case-insensitive).
+ * Supports filtering by category slug, suburb, and service keyword 'q'.
  */
 export default async function ProvidersPage({ searchParams }: ProvidersPageProps) {
   const resolvedParams = await searchParams;
@@ -37,6 +40,7 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
     ? resolvedParams.category[0]
     : resolvedParams.category;
   const suburbParam = resolvedParams.suburb?.trim() ?? "";
+  const queryParam = resolvedParams.q?.trim() ?? "";
 
   // ── Filters ─────────────────────────────────────────────────────────────
   const conditions = [eq(providers.status, "active")];
@@ -62,6 +66,26 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
     );
   }
 
+  // Filter by service keyword if 'q' is provided
+  if (queryParam) {
+    conditions.push(
+      exists(
+        db
+          .select()
+          .from(services)
+          .where(
+            and(
+              eq(services.providerId, providers.id),
+              eq(services.isActive, true),
+              and(
+                ilike(services.name, `%${queryParam}%`),
+              )
+            )
+          )
+      )
+    );
+  }
+
   // ── Data fetching ────────────────────────────────────────────────────────
   const [rawProviders, dbCategories] = await Promise.all([
     db
@@ -76,7 +100,7 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
       .orderBy(categories.name),
   ]);
 
-  // Augment each provider with category names and starting price
+  // Augment each provider with category names, starting price, AND matching services
   const augmentedProviders = await Promise.all(
     rawProviders.map(async (p) => {
       const cats = await db
@@ -92,11 +116,27 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
         .orderBy(services.startingPrice)
         .limit(1);
 
+      // Fetch sample of matching services if searching by keyword
+      let matchingServices: { id: string, name: string }[] = [];
+      if (queryParam) {
+        matchingServices = await db
+          .select({ id: services.id, name: services.name })
+          .from(services)
+          .where(
+            and(
+              eq(services.providerId, p.id),
+              eq(services.isActive, true),
+              ilike(services.name, `%${queryParam}%`)
+            )
+          )
+          .limit(3);
+      }
+
       const price = cheapest?.startingPrice
         ? `From $${Number(cheapest.startingPrice).toFixed(0)}`
         : "Quote required";
 
-      return { ...p, categories: cats, price };
+      return { ...p, categories: cats, price, matchingServices };
     })
   );
 
@@ -113,22 +153,27 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
             : "Find and compare top-rated repair professionals across Brisbane suburbs."
         }
       >
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          {/* Functional suburb filter — Client Component */}
-          <div className="w-full max-w-md">
-            <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
-              Filter by suburb
-            </label>
-            <SuburbFilterInput defaultValue={suburbParam} />
-            {suburbParam && (
-              <p className="mt-2 text-sm text-teal-700 dark:text-teal-300">
-                Filtering results for: <strong>{suburbParam}</strong>
-              </p>
-            )}
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="grid w-full gap-6 md:grid-cols-2 lg:max-w-3xl">
+            {/* Functional suburb filter — Client Component */}
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                Filter by suburb
+              </label>
+              <SuburbFilterInput defaultValue={suburbParam} />
+            </div>
+
+            {/* Service keyword search — Client Component */}
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                Search specific services
+              </label>
+              <ServiceSearchInput defaultValue={queryParam} />
+            </div>
           </div>
 
           {/* Clear active filters */}
-          {(selectedCategory || suburbParam) && (
+          {(selectedCategory || suburbParam || queryParam) && (
             <Link
               href={routes.providers.index}
               className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-950/40 dark:text-slate-200 dark:hover:border-teal-300 dark:hover:text-teal-200"
@@ -137,6 +182,22 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
             </Link>
           )}
         </div>
+
+        {/* Status messages for filters */}
+        {(suburbParam || queryParam) && (
+          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-teal-700 dark:text-teal-300">
+            {suburbParam && (
+              <p>
+                Filtering results for: <strong>{suburbParam}</strong>
+              </p>
+            )}
+            {queryParam && (
+              <p>
+                Searching for services matching: <strong>&quot;{queryParam}&quot;</strong>
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Category filter pills */}
         <div className="mt-10">
@@ -184,6 +245,22 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
                 {provider.description}
               </p>
 
+              {/* Matching services preview if searching */}
+              {provider.matchingServices.length > 0 && (
+                <div className="mt-4 space-y-2 rounded-xl bg-teal-50/50 p-3 dark:bg-teal-950/20 text-teal-900 dark:text-teal-200">
+                  <p className="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400">
+                    Services matching &quot;{queryParam}&quot;
+                  </p>
+                  <ul className="space-y-1">
+                    {provider.matchingServices.map((s) => (
+                      <li key={s.id} className="text-sm font-medium">
+                        • {s.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-600 dark:text-slate-300">
                 <span className="rounded-full border border-white/80 bg-white/75 px-3 py-2 dark:border-white/10 dark:bg-slate-900/40">
                   {provider.isFeatured ? "Featured" : "Verified Professional"}
@@ -193,24 +270,12 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
                 </span>
               </div>
 
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
+              <div className="mt-8">
                 <Link
                   href={routes.providers.details(provider.id)}
-                  className="inline-flex items-center justify-center rounded-full bg-teal-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-teal-400"
+                  className="inline-flex w-full items-center justify-center rounded-full bg-teal-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-teal-400"
                 >
-                  View Details
-                </Link>
-                <Link
-                  href={routes.providers.quote(provider.id)}
-                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200 dark:hover:border-teal-300 dark:hover:text-teal-200"
-                >
-                  Request Quote
-                </Link>
-                <Link
-                  href={routes.providers.book(provider.id)}
-                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200 dark:hover:border-teal-300 dark:hover:text-teal-200"
-                >
-                  Book Service
+                  View Services & Details
                 </Link>
               </div>
             </Card>
@@ -223,11 +288,11 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
               No providers found
             </h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              {suburbParam || selectedCategory
+              {suburbParam || selectedCategory || queryParam
                 ? "No providers match your current filters. Try adjusting or clearing them."
                 : "No active providers are available right now."}
             </p>
-            {(suburbParam || selectedCategory) && (
+            {(suburbParam || selectedCategory || queryParam) && (
               <div className="mt-6">
                 <Link
                   href={routes.providers.index}

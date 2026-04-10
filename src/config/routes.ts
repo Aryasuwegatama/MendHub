@@ -41,11 +41,15 @@ export const routes = {
     details(id: string) {
       return `/providers/${id}`;
     },
-    quote(id: string) {
-      return `/providers/${id}/quote`;
+    quote(id: string, serviceId?: string) {
+      const base = `/providers/${id}/quote`;
+      if (!serviceId) return base;
+      return `${base}?serviceId=${encodeURIComponent(serviceId)}`;
     },
-    book(id: string) {
-      return `/providers/${id}/book`;
+    book(id: string, serviceId?: string) {
+      const base = `/providers/${id}/book`;
+      if (!serviceId) return base;
+      return `${base}?serviceId=${encodeURIComponent(serviceId)}`;
     },
   },
 } as const;
