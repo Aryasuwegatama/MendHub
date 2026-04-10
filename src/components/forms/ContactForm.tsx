@@ -2,17 +2,12 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { contactSchema, type ContactFormValues } from "@/lib/validations/contact";
 import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
-
-type ContactFormValues = {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-};
 
 export default function ContactForm() {
   const [submitMessage, setSubmitMessage] = useState<{
@@ -26,6 +21,7 @@ export default function ContactForm() {
     formState: { errors, isSubmitting },
     reset,
   } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -42,9 +38,19 @@ export default function ContactForm() {
         throw new Error("You appear to be offline. Please reconnect and try again.");
       }
 
-      await Promise.resolve();
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-      console.log("Contact form submitted:", data);
+      const json = await res.json();
+
+      if (!res.ok || !json.success) {
+        throw new Error(json.error ?? "Submission failed. Please try again.");
+      }
 
       setSubmitMessage({
         type: "success",
@@ -73,7 +79,7 @@ export default function ContactForm() {
             label="Name"
             placeholder="Your full name"
             error={errors.name?.message}
-            {...register("name", { required: "Name is required." })}
+            {...register("name")}
           />
 
           <Input
@@ -81,20 +87,14 @@ export default function ContactForm() {
             type="email"
             placeholder="you@example.com"
             error={errors.email?.message}
-            {...register("email", {
-              required: "Email is required.",
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Please enter a valid email address.",
-              },
-            })}
+            {...register("email")}
           />
 
           <Input
             label="Subject"
             placeholder="How can we help?"
             error={errors.subject?.message}
-            {...register("subject", { required: "Subject is required." })}
+            {...register("subject")}
           />
 
           <div className="space-y-1.5">
@@ -106,7 +106,7 @@ export default function ContactForm() {
               rows={6}
               placeholder="Tell us what you need help with"
               className="glass-input w-full rounded-xl px-4 py-2.5 transition focus:outline-none focus:ring-2 focus:ring-[var(--surface-ring)]"
-              {...register("message", { required: "Message is required." })}
+              {...register("message")}
             />
             {errors.message?.message && (
               <p className="text-sm text-red-600">{errors.message.message}</p>

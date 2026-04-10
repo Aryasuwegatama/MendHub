@@ -2,18 +2,12 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { quoteSchema, type QuoteFormValues } from "@/lib/validations/quote";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import SectionLabel from "@/components/ui/SectionLabel";
 import Input from "@/components/ui/Input";
-
-type QuoteRequestFormValues = {
-  name: string;
-  email: string;
-  phone: string;
-  suburb: string;
-  issueDescription: string;
-};
 
 interface QuoteRequestFormProps {
   providerId: string;
@@ -30,7 +24,8 @@ export default function QuoteRequestForm({ providerId }: QuoteRequestFormProps) 
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<QuoteRequestFormValues>({
+  } = useForm<QuoteFormValues>({
+    resolver: zodResolver(quoteSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -40,7 +35,7 @@ export default function QuoteRequestForm({ providerId }: QuoteRequestFormProps) 
     },
   });
 
-  const onSubmit = async (data: QuoteRequestFormValues) => {
+  const onSubmit = async (data: QuoteFormValues) => {
     setSubmitMessage(null);
 
     try {
@@ -48,12 +43,25 @@ export default function QuoteRequestForm({ providerId }: QuoteRequestFormProps) 
         throw new Error("You appear to be offline. Please reconnect and try again.");
       }
 
-      await Promise.resolve();
-
-      console.log("Quote request submitted:", {
-        providerId,
-        ...data,
+      const res = await fetch("/api/quotes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          providerId,
+          customerName: data.name,
+          customerEmail: data.email,
+          customerPhone: data.phone,
+          issueDescription: data.issueDescription,
+        }),
       });
+
+      const json = await res.json();
+
+      if (!res.ok || !json.success) {
+        throw new Error(json.error ?? "Submission failed. Please try again.");
+      }
 
       setSubmitMessage({
         type: "success",
@@ -85,9 +93,7 @@ export default function QuoteRequestForm({ providerId }: QuoteRequestFormProps) 
           label="Name"
           placeholder="Your full name"
           error={errors.name?.message}
-          {...register("name", {
-            required: "Name is required.",
-          })}
+          {...register("name")}
         />
 
         <Input
@@ -95,9 +101,7 @@ export default function QuoteRequestForm({ providerId }: QuoteRequestFormProps) 
           type="email"
           placeholder="you@example.com"
           error={errors.email?.message}
-          {...register("email", {
-            required: "Email is required.",
-          })}
+          {...register("email")}
         />
 
         <div className="grid gap-5 sm:grid-cols-2">
@@ -106,18 +110,14 @@ export default function QuoteRequestForm({ providerId }: QuoteRequestFormProps) 
             type="tel"
             placeholder="0400 000 000"
             error={errors.phone?.message}
-            {...register("phone", {
-              required: "Phone is required.",
-            })}
+            {...register("phone")}
           />
 
           <Input
             label="Suburb"
             placeholder="e.g. Brisbane City"
             error={errors.suburb?.message}
-            {...register("suburb", {
-              required: "Suburb is required.",
-            })}
+            {...register("suburb")}
           />
         </div>
 
@@ -130,9 +130,7 @@ export default function QuoteRequestForm({ providerId }: QuoteRequestFormProps) 
             rows={5}
             placeholder="Describe the repair issue and anything the provider should know"
             className="glass-input w-full rounded-xl px-4 py-2.5 transition focus:outline-none focus:ring-2 focus:ring-[var(--surface-ring)]"
-            {...register("issueDescription", {
-              required: "Issue description is required.",
-            })}
+            {...register("issueDescription")}
           />
           {errors.issueDescription?.message && (
             <p className="text-sm text-red-600">{errors.issueDescription.message}</p>
