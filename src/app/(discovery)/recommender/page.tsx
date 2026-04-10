@@ -148,7 +148,7 @@ export default function RecommenderPage() {
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
           <Card variant="default">
             <SectionLabel>Smart category recommender</SectionLabel>
-            <h2 className="mt-3 text-2xl font-bold text-slate-900 dark:text-white">Answer 4 short questions</h2>
+            <h2 className="mt-3 text-2xl font-bold text-slate-900 dark:text-white">Answer 3 short questions</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
               This guided flow helps you choose the right repair category before browsing providers.
             </p>
