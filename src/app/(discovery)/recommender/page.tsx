@@ -144,14 +144,23 @@ export default function RecommenderPage() {
 
     if (step === 3) {
       setError("");
+      // Advance the step BEFORE the async call so the right panel
+      // enters the loading branch immediately (isPending becomes true).
+      setStep(4);
       startTransition(async () => {
-        const results = await getRecommendedProviders(
-          recommendation,
-          answers.suburb,
-          answers.serviceFilter
-        );
-        setMatchedProviders(results);
-        setStep(4); // Move to results display
+        try {
+          const results = await getRecommendedProviders(
+            recommendation,
+            answers.suburb,
+            answers.serviceFilter
+          );
+          setMatchedProviders(results);
+        } catch {
+          // On DB / network failure, bring the user back to step 3
+          // and surface a recoverable error message.
+          setStep(3);
+          setError("Something went wrong fetching providers. Please try again.");
+        }
       });
       return;
     }
@@ -296,7 +305,14 @@ export default function RecommenderPage() {
         <Card variant="default" className="flex flex-col">
           <SectionLabel>Matched providers</SectionLabel>
 
-          {step <= TOTAL_STEPS ? (
+          {/* Check isPending first — step advances to 4 before the fetch so
+              the spinner must be evaluated before the step <= TOTAL_STEPS guard. */}
+          {isPending ? (
+            <div className="flex flex-1 flex-col items-center justify-center py-10">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-teal-500 border-t-transparent" />
+              <p className="mt-4 text-slate-600 dark:text-slate-300">Finding best providers for you...</p>
+            </div>
+          ) : step <= TOTAL_STEPS ? (
             <>
               <h3 className="mt-3 text-xl font-semibold text-slate-900 dark:text-white">
                 Your matches will appear here
@@ -305,11 +321,6 @@ export default function RecommenderPage() {
                 Complete all 3 questions and we&apos;ll find providers for your exact issue.
               </p>
             </>
-          ) : isPending ? (
-            <div className="flex flex-1 flex-col items-center justify-center py-10">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-teal-500 border-t-transparent" />
-              <p className="mt-4 text-slate-600 dark:text-slate-300">Finding best providers for you...</p>
-            </div>
           ) : matchedProviders && matchedProviders.length > 0 ? (
             <div className="flex flex-1 flex-col overflow-hidden">
               <div className="mb-6">
