@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { routes } from "@/config/routes";
 import SectionLabel from "@/components/ui/SectionLabel";
@@ -9,6 +9,8 @@ import Card from "@/components/ui/Card";
 import PageShell from "@/components/ui/PageShell";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
+import PriceBadge from "@/components/ui/PriceBadge";
+import { getRecommendedProviders } from "./actions";
 
 type ItemType =
   | "phone"
@@ -26,13 +28,10 @@ type ProblemType =
   | "noise-damage-wear"
   | "other";
 
-type NextStepType = "quote" | "book" | "browse";
-
 type RecommenderAnswers = {
   item: ItemType | "";
   problem: ProblemType | "";
   suburb: string;
-  nextStep: NextStepType | "";
 };
 
 const ITEM_OPTIONS: { value: ItemType; label: string }[] = [
@@ -53,12 +52,6 @@ const PROBLEM_OPTIONS: { value: ProblemType; label: string }[] = [
   { value: "other", label: "Other" },
 ];
 
-const NEXT_STEP_OPTIONS: { value: NextStepType; label: string }[] = [
-  { value: "quote", label: "Request a quote" },
-  { value: "book", label: "Book a service" },
-  { value: "browse", label: "Browse providers first" },
-];
-
 const ITEM_TO_CATEGORY: Record<ItemType, string> = {
   phone: "Phone Repair",
   laptop: "Laptop Repair",
@@ -77,12 +70,6 @@ const PROBLEM_FALLBACK_TO_CATEGORY: Record<ProblemType, string> = {
   other: "General Repair Services",
 };
 
-const NEXT_STEP_TO_CTA: Record<NextStepType, string> = {
-  quote: "Request Quote",
-  book: "Book Service",
-  browse: "See Providers",
-};
-
 function getRecommendation(answers: RecommenderAnswers) {
   if (answers.item && answers.item !== "other") {
     return ITEM_TO_CATEGORY[answers.item];
@@ -95,67 +82,35 @@ function getRecommendation(answers: RecommenderAnswers) {
   return "General Repair Services";
 }
 
-function getProvidersHref(answers: RecommenderAnswers) {
-  if (answers.item && answers.item !== "other") {
-    return routes.providers.byCategory(answers.item);
-  }
-
-  if (answers.problem === "cracked") {
-    return routes.providers.byCategory("phone");
-  }
-
-  if (answers.problem === "not-turning-on") {
-    return routes.providers.byCategory("laptop");
-  }
-
-  if (answers.problem === "not-working") {
-    return routes.providers.byCategory("appliance");
-  }
-
-  if (answers.problem === "adjustment") {
-    return routes.providers.byCategory("clothing");
-  }
-
-  if (answers.problem === "noise-damage-wear") {
-    return routes.providers.byCategory("bicycle");
-  }
-
-  return routes.providers.index;
-}
-
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 3;
 
 export default function RecommenderPage() {
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const [matchedProviders, setMatchedProviders] = useState<any[] | null>(null);
+
   const [answers, setAnswers] = useState<RecommenderAnswers>({
     item: "",
     problem: "",
     suburb: "",
-    nextStep: "",
   });
 
   const recommendation = useMemo(() => getRecommendation(answers), [answers]);
-  const providersHref = useMemo(() => getProvidersHref(answers), [answers]);
 
   const handleNext = () => {
-    if (step === 1 && !answers.item) {
-      setError("Please choose what item needs repair.");
-      return;
-    }
-
-    if (step === 2 && !answers.problem) {
-      setError("Please choose the problem type.");
-      return;
-    }
-
     if (step === 3 && !answers.suburb.trim()) {
       setError("Please enter your preferred suburb or area.");
       return;
     }
 
-    if (step === 4 && !answers.nextStep) {
-      setError("Please choose your preferred next step.");
+    if (step === 3) {
+      setError("");
+      startTransition(async () => {
+        const results = await getRecommendedProviders(recommendation, answers.suburb);
+        setMatchedProviders(results);
+        setStep(4); // Showing results
+      });
       return;
     }
 
@@ -173,13 +128,11 @@ export default function RecommenderPage() {
       item: "",
       problem: "",
       suburb: "",
-      nextStep: "",
     });
+    setMatchedProviders(null);
     setError("");
     setStep(1);
   };
-
-  const ctaLabel = answers.nextStep ? NEXT_STEP_TO_CTA[answers.nextStep] : "See Providers";
 
   return (
     <PageShell>
@@ -242,19 +195,6 @@ export default function RecommenderPage() {
                 />
               )}
 
-              {step === 4 && (
-                <Select
-                  label="What would you prefer next?"
-                  value={answers.nextStep}
-                  onChange={(event) => {
-                    setAnswers((current) => ({ ...current, nextStep: event.target.value as NextStepType }));
-                    setError("");
-                  }}
-                  options={NEXT_STEP_OPTIONS}
-                  placeholder="Choose next action"
-                />
-              )}
-
               {error && <p className="text-sm font-medium text-red-600">{error}</p>}
 
               {step <= TOTAL_STEPS && (
@@ -270,34 +210,90 @@ export default function RecommenderPage() {
             </div>
           </Card>
 
-          <Card variant="default">
+          <Card variant="default" className="flex flex-col">
             <SectionLabel>Recommended outcome</SectionLabel>
             {step <= TOTAL_STEPS ? (
               <>
                 <h3 className="mt-3 text-xl font-semibold text-slate-900 dark:text-white">Your recommendation will appear here</h3>
                 <p className="mt-3 text-slate-600 dark:text-slate-300">
-                  Complete all 4 questions to get a category match and your best next step.
+                  Complete all 3 questions to get a category match and matched providers.
                 </p>
               </>
-            ) : (
-              <>
-                <h3 className="mt-3 text-2xl font-bold text-slate-900 dark:text-white">{recommendation}</h3>
-                <p className="mt-4 text-slate-600 dark:text-slate-300">
-                  Suggested next step: {ctaLabel}
-                  {answers.suburb.trim() ? ` in ${answers.suburb.trim()}` : ""}.
-                </p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Link
-                    href={providersHref}
-                    className="inline-flex items-center justify-center rounded-full bg-teal-400 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-teal-300"
-                  >
-                    {ctaLabel}
-                  </Link>
-                  <Button type="button" variant="ghost" size="md" className="text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-white/10 dark:hover:text-white" onClick={handleReset}>
+            ) : isPending ? (
+              <div className="flex flex-1 flex-col items-center justify-center py-10">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-teal-500 border-t-transparent"></div>
+                <p className="mt-4 text-slate-600 dark:text-slate-300">Finding best providers for you...</p>
+              </div>
+            ) : matchedProviders && matchedProviders.length > 0 ? (
+              <div className="flex flex-1 flex-col overflow-hidden">
+                <div className="mb-6">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{recommendation}</h3>
+                  <p className="mt-2 text-slate-600 dark:text-slate-300">
+                    We found {matchedProviders.length} providers matching your needs
+                    {answers.suburb.trim() ? ` in ${answers.suburb.trim()}` : ""}.
+                  </p>
+                </div>
+
+                <div className="flex-1 space-y-4 overflow-y-auto pr-2 max-h-[500px]">
+                  {matchedProviders.map((provider) => (
+                    <div
+                      key={provider.id}
+                      className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-teal-300 dark:border-white/10 dark:bg-slate-900"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <h4 className="text-lg font-bold text-slate-900 dark:text-white">{provider.businessName}</h4>
+                          <p className="text-sm text-slate-500 dark:text-slate-400">{provider.suburb}</p>
+                        </div>
+                        <PriceBadge className="px-3 py-1 text-xs">{provider.price}</PriceBadge>
+                      </div>
+
+                      <p className="mt-3 line-clamp-2 text-sm text-slate-600 dark:text-slate-300">
+                        {provider.description}
+                      </p>
+
+                      <div className="mt-4">
+                        <Link
+                          href={routes.providers.details(provider.id)}
+                          className="inline-flex w-full items-center justify-center rounded-full bg-teal-500 py-2 text-sm font-semibold text-slate-950 transition hover:bg-teal-400"
+                        >
+                          View Profile
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-3 border-t border-slate-100 pt-6 dark:border-white/5">
+                  <Button type="button" variant="ghost" size="md" onClick={handleReset}>
                     Start Again
                   </Button>
+                  <Link
+                    href={routes.providers.index}
+                    className="inline-flex items-center justify-center rounded-full border border-slate-200 px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-white/10 dark:text-slate-200 dark:hover:bg-white/5"
+                  >
+                    Browse All Providers
+                  </Link>
                 </div>
-              </>
+              </div>
+            ) : (
+              <div className="flex flex-1 flex-col items-center justify-center py-10 text-center">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">No exact matches yet</h3>
+                <p className="mt-3 max-w-xs text-slate-600 dark:text-slate-300">
+                  We couldn&apos;t find providers in &quot;{answers.suburb}&quot; for {recommendation}.
+                </p>
+                <div className="mt-6 space-y-3">
+                  <Button type="button" variant="primary" size="md" onClick={handleReset}>
+                    Try Another Suburb
+                  </Button>
+                  <Link
+                    href={routes.providers.index}
+                    className="block text-sm font-semibold text-teal-600 hover:text-teal-500 dark:text-teal-400"
+                  >
+                    See all Brisbane providers
+                  </Link>
+                </div>
+              </div>
             )}
           </Card>
         </div>
