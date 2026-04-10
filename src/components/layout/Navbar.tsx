@@ -30,7 +30,7 @@ export default function Navbar() {
           {/* Mobile: icon-only logo + brand text */}
           <Link href="/" className="flex items-center gap-2 md:hidden">
             <Image
-              src="/MendHub Logo (Icon only).png"
+              src="/MendHub_Logo__Icon_only_transparent_background.png"
               alt="MendHub"
               width={32}
               height={32}
