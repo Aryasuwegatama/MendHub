@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MendHub
 
-## Getting Started
+MendHub is a Brisbane-focused repair marketplace built with Next.js App Router, TypeScript, Tailwind CSS, and Drizzle.
 
-First, run the development server:
+## Prerequisites
+
+1. Node.js 20+
+2. pnpm (recommended package manager for this repo)
+
+## Setup
+
+1. Clone the repository.
+2. Install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. If needed, create a local environment file:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp .env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Fill any required environment variables in .env.local.
 
-## Learn More
+## Run the app locally
 
-To learn more about Next.js, take a look at the following resources:
+Start development server:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open the app at:
 
-## Deploy on Vercel
+- http://localhost:3000
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Useful scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Run lint:
+
+```bash
+pnpm run lint
+```
+
+- Build for production:
+
+```bash
+pnpm run build
+```
+
+- Start production build:
+
+```bash
+pnpm run start
+```
+
+## Key routes
+
+- Home: /
+- Categories: /categories
+- Providers: /providers
+- Recommender: /recommender
+- Contact: /contact
+- List Your Business: /list-your-business
+- Checkout Payment: /payment
+- Checkout Confirmation: /confirmation
+- Admin Dashboard: /admin
+
+## Admin Dashboard (MVP)
+
+The admin page is a simple internal view with static mock data (no backend wiring yet).
+
+Path:
+
+- /admin
+
+Current sections:
+
+1. Provider Submissions
+2. Bookings
+3. Quote Requests
+
+Notes:
+
+1. Approve and Reject buttons are UI-only placeholders.
+2. Authentication and authorization are handled separately.
+3. No charts, analytics, filters, or editing forms are included in this MVP.
+
+## Tech stack
+
+1. Next.js 16 (App Router)
+2. TypeScript
+3. Tailwind CSS
+4. Drizzle ORM
+
+## Troubleshooting
+
+1. If UI looks stale after changing routes/components, stop and restart pnpm dev.
+2. If type references seem outdated after route moves, clear .next and run dev again.

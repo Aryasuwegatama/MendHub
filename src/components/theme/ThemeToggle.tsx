@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { useTheme } from "@/components/theme/ThemeProvider";
 import { cn } from "@/lib/utils";
 
@@ -27,11 +28,16 @@ function ThemeIcon({ icon }: { icon: "Sun" | "Moon" }) {
 
 export default function ThemeToggle({ compact = false }: { compact?: boolean }) {
   const { theme, setTheme } = useTheme();
+  const isMounted = useSyncExternalStore(
+    () => () => undefined,
+    () => true,
+    () => false
+  );
 
   return (
     <div className="glass-pill inline-flex items-center gap-1 rounded-full p-1">
       {themeOptions.map((option) => {
-        const isActive = theme === option.value;
+        const isActive = isMounted ? theme === option.value : option.value === "light";
 
         return (
           <button
