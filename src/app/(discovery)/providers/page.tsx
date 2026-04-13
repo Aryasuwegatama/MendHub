@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/db";
-import { providers, providerCategories, categories, services } from "@/db/schema";
-import { eq, and, ilike, exists } from "drizzle-orm";
+import { providers, providerCategories, categories, services, reviews } from "@/db/schema";
+import { eq, and, ilike, exists, avg, count } from "drizzle-orm";
 import { routes } from "@/config/routes";
 import Card from "@/components/ui/Card";
 import PageIntro from "@/components/ui/PageIntro";
@@ -149,11 +149,22 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
           .limit(3);
       }
 
+      const [reviewStats] = await db
+        .select({
+          avgRating: avg(reviews.rating),
+          reviewCount: count(reviews.id),
+        })
+        .from(reviews)
+        .where(eq(reviews.providerId, p.id));
+
       const price = cheapest?.startingPrice
         ? `From $${Number(cheapest.startingPrice).toFixed(0)}`
         : "Quote required";
 
-      return { ...p, categories: cats, price, matchingServices };
+      const avgRating = reviewStats?.avgRating ? Number(reviewStats.avgRating) : null;
+      const reviewCount = reviewStats?.reviewCount ?? 0;
+
+      return { ...p, categories: cats, price, matchingServices, avgRating, reviewCount };
     })
   );
 
@@ -285,6 +296,17 @@ export default async function ProvidersPage({ searchParams }: ProvidersPageProps
                 <span className="rounded-full border border-white/80 bg-white/75 px-3 py-2 dark:border-white/10 dark:bg-slate-900/40">
                   Suburb: {provider.suburb}
                 </span>
+                {provider.avgRating !== null && provider.reviewCount > 0 && (
+                  <span className="flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50/80 px-3 py-2 dark:border-amber-400/20 dark:bg-amber-400/10">
+                    <span className="text-amber-400 text-sm leading-none">{'★'.repeat(Math.round(provider.avgRating))}{'☆'.repeat(5 - Math.round(provider.avgRating))}</span>
+                    <span className="text-xs font-semibold text-amber-800 dark:text-amber-300">
+                      {provider.avgRating.toFixed(1)}
+                    </span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
+                      ({provider.reviewCount} {provider.reviewCount === 1 ? 'review' : 'reviews'})
+                    </span>
+                  </span>
+                )}
               </div>
 
               <div className="mt-8">
