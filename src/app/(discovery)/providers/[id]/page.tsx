@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/db";
-import { providers, services, providerCategories, categories } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
+import { providers, services, providerCategories, categories, reviews } from "@/db/schema";
+import { eq, and, desc } from "drizzle-orm";
 import { routes } from "@/config/routes";
 import Card from "@/components/ui/Card";
 import PageIntro from "@/components/ui/PageIntro";
@@ -22,7 +22,7 @@ async function getProviderData(id: string) {
 
   if (!provider) return null;
 
-  const [providerServices, providerCategoryList] = await Promise.all([
+  const [providerServices, providerCategoryList, providerReviews] = await Promise.all([
     db
       .select()
       .from(services)
@@ -32,9 +32,19 @@ async function getProviderData(id: string) {
       .from(providerCategories)
       .innerJoin(categories, eq(providerCategories.categoryId, categories.id))
       .where(eq(providerCategories.providerId, id)),
+    db
+      .select()
+      .from(reviews)
+      .where(eq(reviews.providerId, id))
+      .orderBy(desc(reviews.createdAt)),
   ]);
 
-  return { ...provider, services: providerServices, categories: providerCategoryList };
+  return { 
+    ...provider, 
+    services: providerServices, 
+    categories: providerCategoryList, 
+    reviews: providerReviews 
+  };
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -59,6 +69,11 @@ export default async function ProviderDetailPage({
     notFound();
   }
 
+  const reviewsCount = provider.reviews.length;
+  const avgRating = reviewsCount > 0 
+    ? provider.reviews.reduce((acc, r) => acc + Number(r.rating), 0) / reviewsCount
+    : 0;
+
   return (
     <PageShell>
       <PageIntro
@@ -71,6 +86,12 @@ export default async function ProviderDetailPage({
             <span className="glass-pill inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
               {provider.categories?.[0]?.name ?? "Repair Service"}
             </span>
+            {reviewsCount > 0 && (
+              <span className="glass-pill inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                <span className="text-yellow-500">★</span>
+                {avgRating.toFixed(1)} ({reviewsCount} reviews)
+              </span>
+            )}
             {provider.isFeatured ? (
               <span className="inline-flex items-center rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-slate-950">
                 Featured Professional
@@ -143,6 +164,40 @@ export default async function ProviderDetailPage({
                 </div>
               </div>
             ))}
+          </div>
+        </Card>
+
+        {/* Customer Reviews Section */}
+        <Card variant="default">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Customer Reviews</h2>
+            <span className="glass-pill rounded-full px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+              {reviewsCount} reviews
+            </span>
+          </div>
+
+          <div className="mt-8 space-y-6">
+            {reviewsCount > 0 ? (
+              provider.reviews.map((review) => (
+                <div key={review.id} className="border-b border-slate-100 pb-6 last:border-0 last:pb-0 dark:border-slate-800">
+                  <div className="flex items-center justify-between">
+                    <p className="font-semibold text-slate-900 dark:text-white">{review.customerName}</p>
+                    <div className="flex items-center gap-1 text-sm font-bold text-yellow-600 dark:text-yellow-500">
+                      <span>★</span>
+                      {Number(review.rating).toFixed(1)}
+                    </div>
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                    {review.comment}
+                  </p>
+                  <p className="mt-3 text-xs text-slate-400">
+                    {new Date(review.createdAt).toLocaleDateString('en-AU', { month: 'long', year: 'numeric' })}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-slate-500 py-4 italic">No reviews yet for this provider.</p>
+            )}
           </div>
         </Card>
       </div>

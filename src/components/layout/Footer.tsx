@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { routes } from "@/config/routes";
+import NewsletterForm from "@/components/NewsletterForm";
 
 const footerLinks = [
   {
@@ -77,6 +78,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
+        <NewsletterForm />
       </div>
       <div className="mx-auto mt-8 max-w-6xl border-t border-white/30 pt-6 text-center text-sm text-slate-500 dark:border-white/10 dark:text-slate-500">
         <p>

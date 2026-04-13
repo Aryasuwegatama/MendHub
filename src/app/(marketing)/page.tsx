@@ -22,6 +22,12 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="min-h-screen text-slate-900 dark:text-slate-100">
+      {/* Promo Banner */}
+      <div className="bg-teal-900 px-4 py-2 text-center text-sm font-medium text-white dark:bg-slate-900">
+        <p>
+          🎉 Special Offer: Use code <span className="font-bold text-teal-300 uppercase tracking-wider">MEND10</span> for 10% off your first booking deposit!
+        </p>
+      </div>
       {/* Hero section */}
       <section className="overflow-hidden bg-gradient-to-br from-teal-600 via-teal-700 to-slate-950 px-4 py-16 sm:px-6 lg:px-8 dark:from-slate-950 dark:via-teal-950 dark:to-slate-900">
         <div className="mx-auto max-w-6xl">
@@ -77,6 +83,55 @@ export default function Home() {
                 </h3>
                 <p className="mt-3 text-slate-600 dark:text-slate-300">{category.description}</p>
               </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+ 
+      {/* News & Tips Section */}
+      <section className="bg-slate-50 px-4 py-16 sm:px-6 lg:px-8 dark:bg-slate-900/40">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <SectionLabel>Repair Tips & Updates</SectionLabel>
+              <h2 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">Latest from MendHub</h2>
+            </div>
+            <Link href="#" className="text-sm font-semibold text-teal-600 hover:text-teal-700 dark:text-teal-400">
+              View all articles &rarr;
+            </Link>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                title: "5 Tips to Extend Phone Battery Life",
+                category: "Mobile Repairs",
+                date: "April 10, 2026",
+                description: "Simple habits that can double your lithium-ion battery's lifespan over two years.",
+              },
+              {
+                title: "Is it worth fixing old appliances?",
+                category: "Home Maintenance",
+                date: "April 08, 2026",
+                description: "When to repair vs. replace your washing machine or fridge based on the 50% rule.",
+              },
+              {
+                title: "Spring Cleaning: Tech Edition",
+                category: "Laptop Care",
+                date: "April 05, 2026",
+                description: "Deep-cleaning your keyboard and fans to prevent thermal throttling and hardware failure.",
+              },
+            ].map((article, i) => (
+              <div key={i} className="group flex flex-col rounded-3xl border border-slate-200 bg-white p-6 transition hover:shadow-lg dark:border-slate-800 dark:bg-slate-950">
+                <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">{article.category}</span>
+                <h3 className="mt-4 text-xl font-bold text-slate-900 transition group-hover:text-teal-600 dark:text-white dark:group-hover:text-teal-400">
+                  {article.title}
+                </h3>
+                <p className="mt-3 flex-1 text-slate-600 dark:text-slate-400">{article.description}</p>
+                <div className="mt-6 border-t border-slate-100 pt-4 dark:border-slate-800">
+                  <span className="text-sm text-slate-500">{article.date}</span>
+                </div>
+              </div>
             ))}
           </div>
         </div>
