@@ -145,3 +145,12 @@ export const notificationLogs = pgTable('notification_logs', {
   status: varchar('status', { length: 20 }).notNull(), // 'sent', 'failed'
   sentAt: timestamp('sent_at').defaultNow().notNull(),
 });
+
+export const reviews = pgTable('reviews', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  providerId: uuid('provider_id').references(() => providers.id).notNull(),
+  customerName: varchar('customer_name', { length: 255 }).notNull(),
+  rating: decimal('rating', { precision: 2, scale: 1 }).notNull(),
+  comment: text('comment'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});

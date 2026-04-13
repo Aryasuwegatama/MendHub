@@ -22,6 +22,28 @@ export const metadata: Metadata = {
   },
   description:
     "Find trusted local repair services in Brisbane. Compare providers, book repairs, and get quotes for phones, laptops, appliances, and more.",
+  openGraph: {
+    title: "MendHub — Brisbane Repair Marketplace",
+    description: "Find trusted local repair services in Brisbane. Compare providers, book repairs, and get quotes for phones, laptops, appliances, and more.",
+    url: "https://mendhub.vercel.app",
+    siteName: "MendHub",
+    images: [
+      {
+        url: "/og-image.png", // Assuming existence or future addition
+        width: 1200,
+        height: 630,
+        alt: "MendHub Brisbane Repair Marketplace",
+      },
+    ],
+    locale: "en_AU",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MendHub — Brisbane Repair Marketplace",
+    description: "Find trusted local repair services in Brisbane. Compare providers, book repairs, and get quotes for phones, laptops, appliances, and more.",
+    images: ["/og-image.png"],
+  },
 };
 
 const themeScript = `
