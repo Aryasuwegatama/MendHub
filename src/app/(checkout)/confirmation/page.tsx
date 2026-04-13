@@ -29,7 +29,8 @@ type ConfirmationPageProps = {
 export default async function ConfirmationPage({ searchParams }: ConfirmationPageProps) {
   const { ref } = await searchParams;
 
-  if (!ref || !db) {
+  // db is always initialized — DATABASE_URL is required in all environments
+  if (!ref) {
     redirect(routes.providers.index);
   }
 
