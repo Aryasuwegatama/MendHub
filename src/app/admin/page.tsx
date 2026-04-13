@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import RoleGate from "@/components/auth/RoleGate";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import { routes } from "@/config/routes";
 
 export const metadata: Metadata = {
-  title: "MendHub Company Dashboard",
-  description: "MendHub internal dashboard for provider tracking, bookings, and quote requests.",
+  title: "Admin Dashboard",
+  description: "Internal admin view for provider submissions, bookings, and quote requests.",
 };
 
 type ProviderSubmission = {
@@ -34,16 +33,6 @@ type QuoteRequest = {
   issueSummary: string;
   suburb: string;
   status: "new" | "in-review" | "quoted";
-};
-
-type ProviderTracking = {
-  id: string;
-  businessName: string;
-  category: string;
-  suburb: string;
-  completionRate: string;
-  activeBookings: number;
-  status: "active" | "needs-review";
 };
 
 const providerSubmissions: ProviderSubmission[] = [
@@ -121,48 +110,12 @@ const quoteRequests: QuoteRequest[] = [
   },
 ];
 
-const providerTracking: ProviderTracking[] = [
-  {
-    id: "pt_1",
-    businessName: "Northside Phone Repairs",
-    category: "Phone Repair",
-    suburb: "Fortitude Valley",
-    completionRate: "94%",
-    activeBookings: 8,
-    status: "active",
-  },
-  {
-    id: "pt_2",
-    businessName: "River City Appliance Care",
-    category: "Appliance Repair",
-    suburb: "Indooroopilly",
-    completionRate: "87%",
-    activeBookings: 5,
-    status: "active",
-  },
-  {
-    id: "pt_3",
-    businessName: "East Brisbane IT Fix",
-    category: "Computer Support",
-    suburb: "Carindale",
-    completionRate: "72%",
-    activeBookings: 2,
-    status: "needs-review",
-  },
-];
-
 function statusVariant(status: string) {
-  if (
-    status === "approved" ||
-    status === "confirmed" ||
-    status === "completed" ||
-    status === "quoted" ||
-    status === "active"
-  ) {
+  if (status === "approved" || status === "confirmed" || status === "completed" || status === "quoted") {
     return "success";
   }
 
-  if (status === "pending" || status === "in-review" || status === "needs-review") {
+  if (status === "pending" || status === "in-review") {
     return "warning";
   }
 
@@ -190,19 +143,18 @@ function AdminSection({ title, description, children }: AdminSectionProps) {
 export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6 lg:px-8">
-      <RoleGate allowedRole="admin">
       <div className="mx-auto max-w-6xl space-y-8">
         <header className="glass-panel-strong rounded-[2rem] px-6 py-8 sm:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">
-                MendHub Company
+                Internal Admin
               </p>
               <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-                Company Dashboard
+                Admin Dashboard
               </h1>
               <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 sm:text-base">
-                Track all providers, submissions, bookings, and quote requests in one simple view.
+                Track provider submissions, bookings, and quote requests in one simple view.
               </p>
             </div>
 
@@ -241,40 +193,6 @@ export default function AdminDashboardPage() {
                         </Button>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </AdminSection>
-
-        <AdminSection
-          title="Provider Tracking"
-          description="MendHub-wide tracking of provider workload and performance."
-        >
-          <ul className="space-y-3">
-            {providerTracking.map((provider) => (
-              <li key={provider.id}>
-                <div className="rounded-2xl border border-slate-200 bg-white/70 p-4 dark:border-slate-800 dark:bg-slate-900/55">
-                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-6">
-                    <p className="text-sm text-slate-600 dark:text-slate-300 lg:col-span-2">
-                      <span className="font-semibold text-slate-900 dark:text-white">Provider:</span> {provider.businessName}
-                    </p>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
-                      <span className="font-semibold text-slate-900 dark:text-white">Category:</span> {provider.category}
-                    </p>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
-                      <span className="font-semibold text-slate-900 dark:text-white">Suburb:</span> {provider.suburb}
-                    </p>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
-                      <span className="font-semibold text-slate-900 dark:text-white">Active:</span> {provider.activeBookings}
-                    </p>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
-                      <span className="font-semibold text-slate-900 dark:text-white">Completion:</span> {provider.completionRate}
-                    </p>
-                  </div>
-                  <div className="mt-3">
-                    <Badge variant={statusVariant(provider.status)}>{provider.status}</Badge>
                   </div>
                 </div>
               </li>
@@ -338,7 +256,6 @@ export default function AdminDashboardPage() {
           </ul>
         </AdminSection>
       </div>
-      </RoleGate>
     </div>
   );
 }

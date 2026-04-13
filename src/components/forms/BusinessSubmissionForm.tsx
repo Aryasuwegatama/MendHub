@@ -73,7 +73,7 @@ export default function BusinessSubmissionForm() {
         <SectionLabel>Partner with us</SectionLabel>
         <h2 className="mt-3 text-3xl font-bold text-slate-900 dark:text-white">List Your Business</h2>
         <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-          Join Australia&rsquo;s fastest growing repair network. Fill out the application below and our team will get back to you within 48 hours.
+          Join Australia's fastest growing repair network. Fill out the application below and our team will get back to you within 48 hours.
         </p>
       </div>
 

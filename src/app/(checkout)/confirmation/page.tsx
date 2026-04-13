@@ -29,7 +29,6 @@ type ConfirmationPageProps = {
 export default async function ConfirmationPage({ searchParams }: ConfirmationPageProps) {
   const { ref } = await searchParams;
 
-  // db is always initialized — DATABASE_URL is required in all environments
   if (!ref) {
     redirect(routes.providers.index);
   }
@@ -51,8 +50,8 @@ export default async function ConfirmationPage({ searchParams }: ConfirmationPag
   let bookingDate: string | null = null;
   let serviceAddress: string | null = null;
   let issueDescription: string | null = null;
-  const linkedId = payment.bookingId ?? payment.quoteRequestId ?? "—";
-  const isBooking = !!payment.bookingId;
+  let linkedId = payment.bookingId ?? payment.quoteRequestId ?? "—";
+  let isBooking = !!payment.bookingId;
 
   if (payment.bookingId) {
     const [booking] = await db
