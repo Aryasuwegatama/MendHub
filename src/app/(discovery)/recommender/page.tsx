@@ -116,7 +116,7 @@ export default function RecommenderPage() {
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
-  const [matchedProviders, setMatchedProviders] = useState<any[] | null>(null);
+  const [matchedProviders, setMatchedProviders] = useState<Array<{ id: string; businessName: string }> | null>(null);
 
   const [answers, setAnswers] = useState<RecommenderAnswers>({
     item: "",

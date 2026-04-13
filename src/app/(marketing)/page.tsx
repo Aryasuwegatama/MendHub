@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 /**
  * Home page — Server Component.
  * Interactive elements (search inputs) are delegated to HeroSearchForm (Client Component).
- * FeaturedProviders fetches directly from the Neon database at request time.
+ * FeaturedProviders uses local mock data for UI-only mode.
  */
 export default function Home() {
   return (
@@ -90,7 +90,7 @@ export default function Home() {
               <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-teal-300">Concierge Matching</p>
               <h2 className="text-3xl font-bold sm:text-4xl">Not sure where to start?</h2>
               <p className="mt-4 max-w-xl text-lg text-slate-300">
-                Skip the search bar. Tell us what's broken, your precise issue, and your location, and we'll instantly match you with accurate pricing from exact-fit local providers.
+                Skip the search bar. Tell us what&rsquo;s broken, your precise issue, and your location, and we&rsquo;ll instantly match you with accurate pricing from exact-fit local providers.
               </p>
               <div className="mt-8">
                 <LinkButton href={routes.recommender} className="!rounded-3xl border border-white/20 hover:border-white/40">
@@ -116,7 +116,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured providers — Server Component, fetches from Neon */}
+      {/* Featured providers — Server Component, UI-only mock data */}
       <FeaturedProviders />
 
       {/* List your business CTA */}

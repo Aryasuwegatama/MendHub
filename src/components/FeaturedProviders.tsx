@@ -2,44 +2,19 @@ import Link from "next/link";
 import { routes } from "@/config/routes";
 import SectionLabel from "@/components/ui/SectionLabel";
 import PriceBadge from "@/components/ui/PriceBadge";
-import { db } from "@/db";
-import { providers, providerCategories, categories, services } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
+import { mockProviders } from "@/lib/mockData";
 
 export default async function FeaturedProviders() {
-  const featuredProviders = await db
-    .select()
-    .from(providers)
-    .where(and(eq(providers.isFeatured, true), eq(providers.status, "active")))
-    .limit(4);
+  const providerData = mockProviders.slice(0, 4).map((provider) => ({
+    id: provider.id,
+    businessName: provider.name,
+    category: provider.categoryLabel,
+    suburb: provider.suburb,
+    description: provider.description,
+    price: provider.price,
+    isFeatured: true,
+  }));
 
-  const providerData = await Promise.all(
-    featuredProviders.map(async (p) => {
-      const [cat] = await db
-        .select({ name: categories.name })
-        .from(providerCategories)
-        .innerJoin(categories, eq(providerCategories.categoryId, categories.id))
-        .where(eq(providerCategories.providerId, p.id))
-        .limit(1);
-
-      const [svc] = await db
-        .select({ startingPrice: services.startingPrice, priceMethod: services.priceMethod })
-        .from(services)
-        .where(and(eq(services.providerId, p.id), eq(services.isActive, true)))
-        .orderBy(services.startingPrice)
-        .limit(1);
-
-      const price = svc?.startingPrice
-        ? `From $${Number(svc.startingPrice).toFixed(0)}`
-        : "Quote required";
-
-      return {
-        ...p,
-        category: cat?.name ?? "Repair Service",
-        price,
-      };
-    })
-  );
   return (
     <section id="providers" className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">

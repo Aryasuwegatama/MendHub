@@ -50,8 +50,8 @@ export default async function ConfirmationPage({ searchParams }: ConfirmationPag
   let bookingDate: string | null = null;
   let serviceAddress: string | null = null;
   let issueDescription: string | null = null;
-  let linkedId = payment.bookingId ?? payment.quoteRequestId ?? "—";
-  let isBooking = !!payment.bookingId;
+  const linkedId = payment.bookingId ?? payment.quoteRequestId ?? "—";
+  const isBooking = !!payment.bookingId;
 
   if (payment.bookingId) {
     const [booking] = await db
