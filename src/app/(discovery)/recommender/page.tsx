@@ -110,13 +110,15 @@ function getProblemLabel(answers: RecommenderAnswers): string | null {
 
 const TOTAL_STEPS = 3;
 
+type RecommendedProvider = Awaited<ReturnType<typeof getRecommendedProviders>>[number];
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function RecommenderPage() {
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
-  const [matchedProviders, setMatchedProviders] = useState<any[] | null>(null);
+  const [matchedProviders, setMatchedProviders] = useState<RecommendedProvider[] | null>(null);
 
   const [answers, setAnswers] = useState<RecommenderAnswers>({
     item: "",

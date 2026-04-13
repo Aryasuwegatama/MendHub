@@ -24,7 +24,7 @@ const footerLinks = [
 export default function Footer() {
   return (
     <footer className="px-4 py-12 text-slate-700 dark:text-slate-300 sm:px-6 lg:px-8">
-      <div className="glass-panel-strong mx-auto flex max-w-6xl flex-col gap-10 rounded-[2rem] px-6 py-10 lg:flex-row lg:justify-between lg:px-10">
+      <div className="glass-panel-strong mx-auto grid max-w-6xl gap-10 rounded-[2rem] px-6 py-10 lg:grid-cols-[1fr_1.4fr] lg:px-10">
         <div className="space-y-4">
           <Link href={routes.home} className="text-xl font-bold text-slate-950 dark:text-white">
             MendHub
@@ -36,8 +36,10 @@ export default function Footer() {
           <p className="text-xs text-slate-500 dark:text-slate-500">
             ABN: 00 000 000 000
           </p>
+          <NewsletterForm />
         </div>
-        <div className="grid gap-8 sm:grid-cols-3 lg:grid-cols-4">
+
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {footerLinks.map((section) => (
             <div key={section.title}>
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-600 dark:text-slate-400">
@@ -71,14 +73,19 @@ export default function Footer() {
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-600 dark:text-slate-400">
               Follow
             </p>
-            <div className="mt-4 flex items-center gap-3 text-2xl text-slate-500 dark:text-slate-400">
-              <span>📘</span>
-              <span>🐦</span>
-              <span>📷</span>
+            <div className="mt-4 flex items-center gap-3">
+              <Link href="#" aria-label="Facebook" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-lg text-slate-600 transition hover:border-teal-300 hover:text-teal-700 dark:border-white/10 dark:text-slate-300 dark:hover:border-teal-300 dark:hover:text-teal-300">
+                📘
+              </Link>
+              <Link href="#" aria-label="X" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-lg text-slate-600 transition hover:border-teal-300 hover:text-teal-700 dark:border-white/10 dark:text-slate-300 dark:hover:border-teal-300 dark:hover:text-teal-300">
+                🐦
+              </Link>
+              <Link href="#" aria-label="Instagram" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-lg text-slate-600 transition hover:border-teal-300 hover:text-teal-700 dark:border-white/10 dark:text-slate-300 dark:hover:border-teal-300 dark:hover:text-teal-300">
+                📷
+              </Link>
             </div>
           </div>
         </div>
-        <NewsletterForm />
       </div>
       <div className="mx-auto mt-8 max-w-6xl border-t border-white/30 pt-6 text-center text-sm text-slate-500 dark:border-white/10 dark:text-slate-500">
         <p>
