@@ -45,7 +45,7 @@ export default function Navbar() {
           </span>
 
           {/* Desktop: full logo + nav links */}
-          <div className="hidden md:flex md:items-center">
+          <div className="hidden md:flex md:items-center md:gap-8">
             <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/MendHub_Logo_transparent_background.png"
@@ -56,7 +56,7 @@ export default function Navbar() {
                 priority
               />
             </Link>
-            <div className="ml-10 flex items-baseline gap-6">
+            <div className="flex items-baseline gap-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.label}
@@ -129,10 +129,16 @@ export default function Navbar() {
           </div>
 
           {/* Desktop: theme pill toggle + list CTA */}
-          <div className="hidden md:flex md:items-center md:gap-4">
+          <div className="hidden md:flex md:items-center md:gap-3">
             <ThemeToggle />
             <Link
-              href={routes.listYourBusiness}
+              href={routes.login}
+              className="rounded-full border border-slate-200 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200"
+            >
+              Login
+            </Link>
+            <Link
+              href={routes.register}
               className="rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-teal-400"
             >
               List Your Business
@@ -156,7 +162,14 @@ export default function Navbar() {
             </Link>
           ))}
           <Link
-            href={routes.listYourBusiness}
+            href={routes.login}
+            className="block rounded-md border border-slate-200 bg-white/70 px-3 py-2 text-base font-medium text-slate-700 hover:border-teal-300 hover:text-teal-800 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200"
+            onClick={() => setIsOpen(false)}
+          >
+            Login
+          </Link>
+          <Link
+            href={routes.register}
             className="block rounded-md bg-teal-500 px-3 py-2 text-base font-medium text-slate-950 hover:bg-teal-400 sm:hidden"
             onClick={() => setIsOpen(false)}
           >

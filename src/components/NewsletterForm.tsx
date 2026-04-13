@@ -55,7 +55,7 @@ export default function NewsletterForm() {
       </form>
       {status === "success" && (
         <p className="mt-3 text-sm font-medium text-teal-600 dark:text-teal-400">
-          🎉 Thank you for subscribing! We've sent a verification link to your email.
+          🎉 Thank you for subscribing! We&apos;ve sent a verification link to your email.
         </p>
       )}
     </div>

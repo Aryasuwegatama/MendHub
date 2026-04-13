@@ -38,23 +38,20 @@ function getPreferredTheme(): Theme {
 }
 
 export default function ThemeProvider({ children }: { children: ReactNode }) {
-  // Always start with "light" to match the server render.
-  // The inline themeScript in layout.tsx has already set data-theme on <html>
-  // before React hydrates, so there is no flash of unstyled content.
-  const [theme, setThemeState] = useState<Theme>("light");
-
-  // After hydration, sync state from whatever data-theme the inline script set.
-  useEffect(() => {
-    const activeTheme = document.documentElement.getAttribute("data-theme");
-
-    if (activeTheme === "light" || activeTheme === "dark") {
-      setThemeState(activeTheme);
-    } else {
-      const preferred = getPreferredTheme();
-      setThemeState(preferred);
-      applyTheme(preferred);
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === "undefined") {
+      return "light";
     }
-  }, []);
+
+    const activeTheme = document.documentElement.getAttribute("data-theme");
+    if (activeTheme === "light" || activeTheme === "dark") {
+      return activeTheme;
+    }
+
+    const preferred = getPreferredTheme();
+    applyTheme(preferred);
+    return preferred;
+  });
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
