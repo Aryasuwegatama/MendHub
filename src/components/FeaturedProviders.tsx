@@ -3,8 +3,8 @@ import { routes } from "@/config/routes";
 import SectionLabel from "@/components/ui/SectionLabel";
 import PriceBadge from "@/components/ui/PriceBadge";
 import { db } from "@/db";
-import { providers, providerCategories, categories, services } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
+import { providers, providerCategories, categories, services, reviews } from "@/db/schema";
+import { eq, and, avg, count } from "drizzle-orm";
 
 export default async function FeaturedProviders() {
   const featuredProviders = await db
@@ -29,14 +29,27 @@ export default async function FeaturedProviders() {
         .orderBy(services.startingPrice)
         .limit(1);
 
+      const [reviewStats] = await db
+        .select({
+          avgRating: avg(reviews.rating),
+          reviewCount: count(reviews.id),
+        })
+        .from(reviews)
+        .where(eq(reviews.providerId, p.id));
+
       const price = svc?.startingPrice
         ? `From $${Number(svc.startingPrice).toFixed(0)}`
         : "Quote required";
+
+      const avgRating = reviewStats?.avgRating ? Number(reviewStats.avgRating) : null;
+      const reviewCount = reviewStats?.reviewCount ?? 0;
 
       return {
         ...p,
         category: cat?.name ?? "Repair Service",
         price,
+        avgRating,
+        reviewCount,
       };
     })
   );
@@ -80,6 +93,19 @@ export default async function FeaturedProviders() {
                 <p className="mt-3 line-clamp-2 text-slate-600 dark:text-slate-300">
                   {provider.description}
                 </p>
+
+                {/* Star rating badge */}
+                {provider.avgRating !== null && provider.reviewCount > 0 && (
+                  <div className="mt-4 flex items-center gap-1.5">
+                    <span className="text-amber-400 text-sm">{'★'.repeat(Math.round(provider.avgRating))}{'☆'.repeat(5 - Math.round(provider.avgRating))}</span>
+                    <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      {provider.avgRating.toFixed(1)}
+                    </span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
+                      ({provider.reviewCount} {provider.reviewCount === 1 ? 'review' : 'reviews'})
+                    </span>
+                  </div>
+                )}
 
                 <PriceBadge className="mt-5">{provider.price}</PriceBadge>
 

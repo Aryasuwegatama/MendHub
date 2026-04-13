@@ -50,8 +50,25 @@ export default function PaymentMethodSelector({
   const [selected, setSelected] = useState<string>("card");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [promoCode, setPromoCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [promoError, setPromoError] = useState<string | null>(null);
 
   const isQuoteFlow = !bookingId && !!quoteRequestId;
+
+  const applyPromoCode = () => {
+    if (promoCode.toUpperCase() === "MEND10") {
+      setDiscount(0.1);
+      setPromoError(null);
+    } else {
+      setPromoError("Invalid promo code. Try MEND10.");
+      setDiscount(0);
+    }
+  };
+
+  const currentAmountNum = Number(amount);
+  const discountedAmount = currentAmountNum * (1 - discount);
+  const finalDepositLabel = discount > 0 ? `$${discountedAmount.toFixed(2)}` : depositLabel;
 
   const handlePay = async () => {
     setError(null);
@@ -67,7 +84,7 @@ export default function PaymentMethodSelector({
         body: JSON.stringify({
           bookingId: bookingId ?? null,
           quoteRequestId: quoteRequestId ?? null,
-          amount: isQuoteFlow ? "0" : amount,
+          amount: isQuoteFlow ? "0" : discountedAmount.toString(),
           paymentMethod: selected,
         }),
       });
@@ -138,15 +155,48 @@ export default function PaymentMethodSelector({
         </p>
         <div className="mt-3 flex items-end justify-between gap-4">
           <span className="text-3xl font-bold text-slate-900 dark:text-white">
-            {isQuoteFlow ? "$0.00" : depositLabel}
+            {isQuoteFlow ? "$0.00" : finalDepositLabel}
           </span>
           {!isQuoteFlow && (
             <span className="text-sm text-slate-600 dark:text-slate-300">
-              Remaining balance: {balanceLabel}
+              {discount > 0 ? (
+                <span className="font-semibold text-teal-600 dark:text-teal-400">10% discount applied!</span>
+              ) : (
+                <>Remaining balance: {balanceLabel}</>
+              )}
             </span>
           )}
         </div>
       </div>
+
+      {/* Promo Code Input */}
+      {!isQuoteFlow && (
+        <div className="mt-6">
+          <label htmlFor="promo-code" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+            Have a promo code?
+          </label>
+          <div className="mt-2 flex gap-2">
+            <input
+              type="text"
+              id="promo-code"
+              value={promoCode}
+              onChange={(e) => setPromoCode(e.target.value)}
+              placeholder="e.g. MEND10"
+              className="flex-grow rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm focus:border-teal-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900"
+              disabled={discount > 0}
+            />
+            <button
+              type="button"
+              onClick={applyPromoCode}
+              disabled={!promoCode || discount > 0}
+              className="rounded-xl bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300 disabled:opacity-50 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            >
+              {discount > 0 ? "Applied" : "Apply"}
+            </button>
+          </div>
+          {promoError && <p className="mt-2 text-xs text-red-500">{promoError}</p>}
+        </div>
+      )}
 
       {error && (
         <p className="mt-4 rounded-2xl border border-red-200 bg-red-50/80 px-4 py-3 text-sm font-medium text-red-700 dark:border-red-400/20 dark:bg-red-400/10 dark:text-red-200">
@@ -172,7 +222,7 @@ export default function PaymentMethodSelector({
           ) : isQuoteFlow ? (
             "Confirm Quote Request"
           ) : (
-            `Pay Deposit ${depositLabel}`
+            `Pay Deposit ${finalDepositLabel}`
           )}
         </button>
         <p className="text-center text-sm text-slate-500 dark:text-slate-400">
