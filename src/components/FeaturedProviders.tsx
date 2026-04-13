@@ -95,15 +95,14 @@ export default async function FeaturedProviders() {
                   {provider.description}
                 </p>
 
-                {/* Star rating badge — only shown when reviews exist */}
                 {provider.avgRating !== null && provider.reviewCount > 0 && (
                   <div className="mt-4 flex items-center gap-1.5">
-                    <span className="text-amber-400 text-sm">{'★'.repeat(Math.round(provider.avgRating))}{'☆'.repeat(5 - Math.round(provider.avgRating))}</span>
+                    <span className="text-amber-400 text-sm" aria-hidden="true">★★★★★</span>
                     <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                       {provider.avgRating.toFixed(1)}
                     </span>
                     <span className="text-xs text-slate-500 dark:text-slate-400">
-                      ({provider.reviewCount} {provider.reviewCount === 1 ? 'review' : 'reviews'})
+                      ({provider.reviewCount} reviews)
                     </span>
                   </div>
                 )}
