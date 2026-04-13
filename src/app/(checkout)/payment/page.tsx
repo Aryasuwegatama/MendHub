@@ -34,8 +34,8 @@ type PaymentPageProps = {
 export default async function PaymentPage({ searchParams }: PaymentPageProps) {
   const { bookingId, quoteRequestId, amount = "65" } = await searchParams;
 
-  // Must have at least one of these to proceed, and DB must be available
-  if ((!bookingId && !quoteRequestId) || !db) {
+  // Must have at least one of these to proceed — db is always initialized
+  if (!bookingId && !quoteRequestId) {
     redirect(routes.providers.index);
   }
 
