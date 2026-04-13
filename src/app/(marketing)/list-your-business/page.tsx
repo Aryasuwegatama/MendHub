@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Card from "@/components/ui/Card";
 import PageIntro from "@/components/ui/PageIntro";
 import PageShell from "@/components/ui/PageShell";
-import Button from "@/components/ui/Button";
 import BusinessSubmissionForm from "@/components/forms/BusinessSubmissionForm";
-import { routes } from "@/config/routes";
 
 export const metadata: Metadata = {
   title: "List Your Business",
@@ -33,21 +30,7 @@ export default function ListBusinessPage() {
           <Card variant="default">
             <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Next step</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">Complete the form below to submit your business for review.</p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              <Link href={routes.login}>
-                <Button type="button" size="sm" variant="secondary">Login</Button>
-              </Link>
-              <Link href={routes.provider}>
-                <Button type="button" size="sm" variant="outline">Provider Dashboard</Button>
-              </Link>
-            </div>
           </Card>
-        </div>
-
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-white/70 p-4 dark:border-slate-800 dark:bg-slate-900/55">
-          <p className="text-sm text-slate-600 dark:text-slate-300">
-            Complete the registration form below to submit your business. Once approved, you can login to track bookings and manage requests.
-          </p>
         </div>
 
         <div className="mt-16">

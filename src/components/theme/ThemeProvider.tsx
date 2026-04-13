@@ -48,9 +48,10 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
     const activeTheme = document.documentElement.getAttribute("data-theme");
 
     if (activeTheme === "light" || activeTheme === "dark") {
-      applyTheme(activeTheme);
+      setThemeState(activeTheme);
     } else {
       const preferred = getPreferredTheme();
+      setThemeState(preferred);
       applyTheme(preferred);
     }
   }, []);
