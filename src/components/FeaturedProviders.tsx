@@ -7,15 +7,12 @@ import { providers, providerCategories, categories, services, reviews } from "@/
 import { eq, and, avg, count } from "drizzle-orm";
 
 export default async function FeaturedProviders() {
-  const providerData = mockProviders.slice(0, 4).map((provider) => ({
-    id: provider.id,
-    businessName: provider.name,
-    category: provider.categoryLabel,
-    suburb: provider.suburb,
-    description: provider.description,
-    price: provider.price,
-    isFeatured: true,
-  }));
+  // Fetch featured active providers from Neon database
+  const featuredProviders = await db
+    .select()
+    .from(providers)
+    .where(and(eq(providers.isFeatured, true), eq(providers.status, "active")))
+    .limit(4);
 
   const providerData = await Promise.all(
     featuredProviders.map(async (p) => {
@@ -98,7 +95,7 @@ export default async function FeaturedProviders() {
                   {provider.description}
                 </p>
 
-                {/* Star rating badge */}
+                {/* Star rating badge — only shown when reviews exist */}
                 {provider.avgRating !== null && provider.reviewCount > 0 && (
                   <div className="mt-4 flex items-center gap-1.5">
                     <span className="text-amber-400 text-sm">{'★'.repeat(Math.round(provider.avgRating))}{'☆'.repeat(5 - Math.round(provider.avgRating))}</span>
