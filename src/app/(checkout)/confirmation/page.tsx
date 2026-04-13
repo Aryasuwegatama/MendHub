@@ -29,7 +29,7 @@ type ConfirmationPageProps = {
 export default async function ConfirmationPage({ searchParams }: ConfirmationPageProps) {
   const { ref } = await searchParams;
 
-  if (!ref) {
+  if (!ref || !db) {
     redirect(routes.providers.index);
   }
 
