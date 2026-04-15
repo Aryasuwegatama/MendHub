@@ -21,7 +21,7 @@ export default function PoliciesPage() {
           <Card variant="default">
             <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Student Project Disclaimer</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              This website is a student project created for the course NIT3274 at James Cook University. It is not a real business, and no actual repair services are being offered or fulfilled through this platform.
+              This website is a student project created for the course NIT3274 at Victoria University Brisbane. It is not a real business, and no actual repair services are being offered or fulfilled through this platform.
             </p>
           </Card>
 

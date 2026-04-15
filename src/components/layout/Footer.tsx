@@ -74,13 +74,13 @@ export default function Footer() {
               Follow
             </p>
             <div className="mt-4 flex items-center gap-3">
-              <Link href="#" aria-label="Facebook" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-lg text-slate-600 transition hover:border-teal-300 hover:text-teal-700 dark:border-white/10 dark:text-slate-300 dark:hover:border-teal-300 dark:hover:text-teal-300">
+              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-lg text-slate-600 transition hover:border-teal-300 hover:text-teal-700 dark:border-white/10 dark:text-slate-300 dark:hover:border-teal-300 dark:hover:text-teal-300">
                 📘
               </Link>
-              <Link href="#" aria-label="X" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-lg text-slate-600 transition hover:border-teal-300 hover:text-teal-700 dark:border-white/10 dark:text-slate-300 dark:hover:border-teal-300 dark:hover:text-teal-300">
+              <Link href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-lg text-slate-600 transition hover:border-teal-300 hover:text-teal-700 dark:border-white/10 dark:text-slate-300 dark:hover:border-teal-300 dark:hover:text-teal-300">
                 🐦
               </Link>
-              <Link href="#" aria-label="Instagram" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-lg text-slate-600 transition hover:border-teal-300 hover:text-teal-700 dark:border-white/10 dark:text-slate-300 dark:hover:border-teal-300 dark:hover:text-teal-300">
+              <Link href="https://www.instagram.com/mendhubau/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-lg text-slate-600 transition hover:border-teal-300 hover:text-teal-700 dark:border-white/10 dark:text-slate-300 dark:hover:border-teal-300 dark:hover:text-teal-300">
                 📷
               </Link>
             </div>
